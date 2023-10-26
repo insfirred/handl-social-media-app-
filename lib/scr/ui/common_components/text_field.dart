@@ -22,10 +22,11 @@ class TextFieldHandl extends StatelessWidget {
       child: TextField(
         controller: controller,
         obscureText: isObscure,
+        style: GoogleFonts.dosis(fontWeight: FontWeight.bold),
         decoration: InputDecoration(
           suffixIcon: suffixIcon,
           hintText: hint,
-          hintStyle: GoogleFonts.dosis(),
+          hintStyle: GoogleFonts.dosis(fontWeight: FontWeight.normal),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
         ),
       ),

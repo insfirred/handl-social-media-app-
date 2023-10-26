@@ -166,6 +166,8 @@ class AppRepository extends StateNotifier<AppState> {
   //   }
   // }
 
+  setAppStatus(AppStatus status) => state = state.copyWith(status: status);
+
   @override
   void dispose() {
     super.dispose();

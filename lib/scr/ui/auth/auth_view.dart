@@ -2,9 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:social_media/scr/ui/auth/auth_view_model.dart';
 
 import '../../constants/colors.dart';
+import '../../repositories/app_repository.dart';
+import '../../routing/app_router.dart';
+import '../../utils/snackbar_utils.dart';
+import 'auth_view_model.dart';
 import 'views/login_view.dart';
 import 'views/register_view.dart';
 
@@ -17,6 +20,27 @@ class AuthView extends ConsumerWidget {
     final activeScreen = ref.watch(
       authViewModelProvider.select((_) => _.activeScreen),
     );
+    final appStatus = ref.watch(
+      appRepositoryProvider.select((_) => _.status),
+    );
+
+    ref.listen(appRepositoryProvider, (prev, next) {
+      if (next.status == AppStatus.authenticatedWithUserData) {
+        context.replaceRoute(const HomeRoute());
+      } else if (next.status == AppStatus.authenticatedWithNoUserData) {
+        context.replaceRoute(const CreateUsernameRoute());
+      }
+    });
+
+    ref.listen(authViewModelProvider, (previous, next) {
+      if (next.status == AuthViewStatus.error) {
+        showErrorMessage(
+          context,
+          next.errorMessage ?? 'Something went wrong!',
+        );
+      }
+    });
+
     return Scaffold(
       body: SafeArea(
         child: SizedBox(
@@ -32,7 +56,7 @@ class AuthView extends ConsumerWidget {
                     child: Hero(
                       tag: 'Handl',
                       child: Text(
-                        activeScreen == AuthPageScreen.login
+                        activeScreen == AuthViewScreen.login
                             ? 'LOGIN'
                             : 'REGISTER',
                         style: GoogleFonts.dosis(
@@ -47,7 +71,7 @@ class AuthView extends ConsumerWidget {
                 ),
                 Expanded(
                   flex: 3,
-                  child: activeScreen == AuthPageScreen.login
+                  child: activeScreen == AuthViewScreen.login
                       ? const LoginView()
                       : const RegisterView(),
                 ),

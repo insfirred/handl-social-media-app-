@@ -1,6 +1,8 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:social_media/scr/repositories/app_repository.dart';
 
 import '../../services/firebase_auth.dart';
 
@@ -10,43 +12,106 @@ final authViewModelProvider =
     StateNotifierProvider.autoDispose<AuthViewModel, AuthViewState>(
   (ref) => AuthViewModel(
     firebaseAuth: ref.watch(firebaseAuthProvider),
+    ref: ref,
   ),
 );
 
 class AuthViewModel extends StateNotifier<AuthViewState> {
   final FirebaseAuth firebaseAuth;
+  final AutoDisposeStateNotifierProviderRef ref;
 
   AuthViewModel({
     required this.firebaseAuth,
+    required this.ref,
   }) : super(const AuthViewState());
 
-  setUsername(String username) => state = state.copyWith(
-        username: username,
-        status: AuthPageStatus.initial,
+  setEmail(String email) => state = state.copyWith(
+        email: email,
+        status: AuthViewStatus.initial,
       );
 
   setPassword(String password) => state = state.copyWith(
         password: password,
-        status: AuthPageStatus.initial,
+        status: AuthViewStatus.initial,
       );
   setConfirmPassword(String password) => state = state.copyWith(
         confirmPassword: password,
-        status: AuthPageStatus.initial,
+        status: AuthViewStatus.initial,
       );
 
-  setAuthPageScreen(AuthPageScreen screen) => state = state.copyWith(
+  setAuthPageScreen(AuthViewScreen screen) => state = state.copyWith(
         activeScreen: screen,
-        status: AuthPageStatus.initial,
+        status: AuthViewStatus.initial,
         password: '',
-        username: '',
+        email: '',
         confirmPassword: '',
       );
 
-  setShowPassword(bool value) => state = state.copyWith(showPassword: value);
+  setShowPassword(bool value) => state = state.copyWith(
+        showPassword: value,
+        status: AuthViewStatus.initial,
+      );
 
   setShowConfirmPassword(bool value) => state = state.copyWith(
         showConfirmPassword: value,
+        status: AuthViewStatus.initial,
       );
+
+  setAuthViewStatus(AuthViewStatus status) =>
+      state = state.copyWith(status: status);
+
+  register() async {
+    if (!_validationOnRegister()) return;
+    try {
+      final credential = await firebaseAuth.createUserWithEmailAndPassword(
+        email: state.email,
+        password: state.password,
+      );
+      ref
+          .read(appRepositoryProvider.notifier)
+          .setAppStatus(AppStatus.authenticatedWithNoUserData);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        _setError('The account already exists for that email.');
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      _setError(e.toString());
+      print(e);
+    }
+    print('No validation error, initiating registration!!!');
+  }
+
+  /// returns true if there is no validation error
+  bool _validationOnRegister() {
+    if (state.email.isEmpty) {
+      _setError('Enter email');
+      print('Enter email');
+      return false;
+    }
+    // TODO: Email validation
+    if (!EmailValidator.validate(state.email)) {
+      _setError('Enter a valid email');
+      print('Enter a valid email');
+      return false;
+    }
+    if (state.password.isEmpty) {
+      _setError('Enter password');
+      print('Enter password');
+      return false;
+    }
+    if (state.password.length < 6 || state.password.length > 14) {
+      _setError('Enter a password of length of 4 - 16 characters.');
+      print('Enter a password of length of 4 - 16 characters.');
+      return false;
+    }
+    if (state.password != state.confirmPassword) {
+      _setError('Confirm password doesn\'t matches');
+      print('Confirm password doesn\'t matches');
+      return false;
+    }
+    return true;
+  }
 
   // /// returns whether back navigation should be triggered or not
   // bool onBackPressed() {
@@ -133,10 +198,10 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   //   }
   // }
 
-  // _setError(String? error) => state = state.copyWith(
-  //       errorMessage: error,
-  //       status: AuthPageStatus.error,
-  //     );
+  _setError(String? error) => state = state.copyWith(
+        errorMessage: error,
+        status: AuthViewStatus.error,
+      );
 
   // /// calls verifyPhoneNumber in Firebase Auth to request or resend OTP
   // _verifyPhoneNumber({bool forceResend = false}) async {
@@ -182,24 +247,24 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
 @freezed
 class AuthViewState with _$AuthViewState {
   const factory AuthViewState({
-    @Default('') String username,
+    @Default('') String email,
     @Default('') String password,
     @Default('') String confirmPassword,
-    @Default(AuthPageStatus.initial) AuthPageStatus status,
-    @Default(AuthPageScreen.login) AuthPageScreen activeScreen,
+    @Default(AuthViewStatus.initial) AuthViewStatus status,
+    @Default(AuthViewScreen.login) AuthViewScreen activeScreen,
     @Default(false) bool showPassword,
     @Default(false) bool showConfirmPassword,
     String? errorMessage,
   }) = _AuthViewState;
 }
 
-enum AuthPageStatus {
+enum AuthViewStatus {
   initial,
   loading,
   error,
 }
 
-enum AuthPageScreen {
+enum AuthViewScreen {
   login,
   register,
 }

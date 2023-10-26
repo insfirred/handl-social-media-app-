@@ -16,21 +16,21 @@ class RegisterView extends ConsumerStatefulWidget {
 }
 
 class _RegisterViewState extends ConsumerState<RegisterView> {
-  late final TextEditingController _usernameController;
+  late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   late final TextEditingController _confirmPasswordController;
 
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController();
+    _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
-    _usernameController.addListener(
+    _emailController.addListener(
       () {
         ref
             .read(authViewModelProvider.notifier)
-            .setUsername(_usernameController.text);
+            .setEmail(_emailController.text);
       },
     );
     _passwordController.addListener(
@@ -69,8 +69,8 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
         children: [
           const SizedBox(height: 80),
           TextFieldHandl(
-            controller: _usernameController,
-            hint: 'Username',
+            controller: _emailController,
+            hint: 'Email',
           ),
           const SizedBox(height: 20),
           TextFieldHandl(
@@ -122,7 +122,8 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
           ),
           const SizedBox(height: 10),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () =>
+                ref.read(authViewModelProvider.notifier).register(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Text(
@@ -150,7 +151,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => ref
                       .read(authViewModelProvider.notifier)
-                      .setAuthPageScreen(AuthPageScreen.login),
+                      .setAuthPageScreen(AuthViewScreen.login),
                   child: Text(
                     'Login here',
                     style: GoogleFonts.dosis(

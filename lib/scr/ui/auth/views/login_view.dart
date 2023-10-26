@@ -16,19 +16,19 @@ class LoginView extends ConsumerStatefulWidget {
 }
 
 class _LoginViewState extends ConsumerState<LoginView> {
-  late final TextEditingController _usernameController;
+  late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController();
+    _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    _usernameController.addListener(
+    _emailController.addListener(
       () {
         ref
             .read(authViewModelProvider.notifier)
-            .setUsername(_usernameController.text);
+            .setEmail(_emailController.text);
       },
     );
     _passwordController.addListener(
@@ -54,8 +54,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
         children: [
           const SizedBox(height: 80),
           TextFieldHandl(
-            controller: _usernameController,
-            hint: 'Username',
+            controller: _emailController,
+            hint: 'Email',
           ),
           const SizedBox(height: 20),
           TextFieldHandl(
@@ -111,7 +111,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   behavior: HitTestBehavior.opaque,
                   onTap: () => ref
                       .read(authViewModelProvider.notifier)
-                      .setAuthPageScreen(AuthPageScreen.register),
+                      .setAuthPageScreen(AuthViewScreen.register),
                   child: Text(
                     'Register here',
                     style: GoogleFonts.dosis(
