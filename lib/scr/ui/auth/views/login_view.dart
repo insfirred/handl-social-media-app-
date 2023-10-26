@@ -6,24 +6,80 @@ import '../../../constants/colors.dart';
 import '../../common_components/text_field.dart';
 import '../auth_view_model.dart';
 
-class LoginView extends ConsumerWidget {
+class LoginView extends ConsumerStatefulWidget {
   const LoginView({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends ConsumerState<LoginView> {
+  late final TextEditingController _usernameController;
+  late final TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+    _passwordController = TextEditingController();
+    _usernameController.addListener(
+      () {
+        ref
+            .read(authViewModelProvider.notifier)
+            .setUsername(_usernameController.text);
+      },
+    );
+    _passwordController.addListener(
+      () {
+        ref
+            .read(authViewModelProvider.notifier)
+            .setPassword(_passwordController.text);
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final showPassword = ref.watch(
+      authViewModelProvider.select((_) => _.showPassword),
+    );
+    final password = ref.watch(
+      authViewModelProvider.select((_) => _.password),
+    );
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 80),
-          const TextFieldHandl(
+          TextFieldHandl(
+            controller: _usernameController,
             hint: 'Username',
           ),
           const SizedBox(height: 20),
-          const TextFieldHandl(
+          TextFieldHandl(
+            controller: _passwordController,
             hint: 'Password',
+            isObscure: !showPassword,
+            suffixIcon: password.isNotEmpty
+                ? GestureDetector(
+                    onTap: () => ref
+                        .read(authViewModelProvider.notifier)
+                        .setShowPassword(!showPassword),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Image.asset(
+                        !showPassword
+                            ? 'assets/images/eye-slash.png'
+                            : 'assets/images/eye.png',
+                        width: 10,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  )
+                : null,
           ),
           const SizedBox(height: 10),
           ElevatedButton(

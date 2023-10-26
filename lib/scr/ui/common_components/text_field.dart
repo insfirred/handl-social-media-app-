@@ -5,16 +5,25 @@ class TextFieldHandl extends StatelessWidget {
   const TextFieldHandl({
     super.key,
     this.hint,
+    required this.controller,
+    this.isObscure = false,
+    this.suffixIcon,
   });
 
   final String? hint;
+  final TextEditingController controller;
+  final bool isObscure;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: TextField(
+        controller: controller,
+        obscureText: isObscure,
         decoration: InputDecoration(
+          suffixIcon: suffixIcon,
           hintText: hint,
           hintStyle: GoogleFonts.dosis(),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),

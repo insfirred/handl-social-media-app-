@@ -6,28 +6,119 @@ import 'package:social_media/scr/ui/auth/auth_view_model.dart';
 import '../../../constants/colors.dart';
 import '../../common_components/text_field.dart';
 
-class RegisterView extends ConsumerWidget {
+class RegisterView extends ConsumerStatefulWidget {
   const RegisterView({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends ConsumerState<RegisterView> {
+  late final TextEditingController _usernameController;
+  late final TextEditingController _passwordController;
+  late final TextEditingController _confirmPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+    _passwordController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+    _usernameController.addListener(
+      () {
+        ref
+            .read(authViewModelProvider.notifier)
+            .setUsername(_usernameController.text);
+      },
+    );
+    _passwordController.addListener(
+      () {
+        ref
+            .read(authViewModelProvider.notifier)
+            .setPassword(_passwordController.text);
+      },
+    );
+    _confirmPasswordController.addListener(
+      () {
+        ref
+            .read(authViewModelProvider.notifier)
+            .setConfirmPassword(_confirmPasswordController.text);
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final showPassword = ref.watch(
+      authViewModelProvider.select((_) => _.showPassword),
+    );
+    final showConfirmPassword = ref.watch(
+      authViewModelProvider.select((_) => _.showConfirmPassword),
+    );
+    final password = ref.watch(
+      authViewModelProvider.select((_) => _.password),
+    );
+    final confirmPassword = ref.watch(
+      authViewModelProvider.select((_) => _.confirmPassword),
+    );
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 80),
-          const TextFieldHandl(
+          TextFieldHandl(
+            controller: _usernameController,
             hint: 'Username',
           ),
           const SizedBox(height: 20),
-          const TextFieldHandl(
+          TextFieldHandl(
+            controller: _passwordController,
             hint: 'Password',
+            isObscure: !showPassword,
+            suffixIcon: password.isNotEmpty
+                ? GestureDetector(
+                    onTap: () => ref
+                        .read(authViewModelProvider.notifier)
+                        .setShowPassword(!showPassword),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Image.asset(
+                        !showPassword
+                            ? 'assets/images/eye-slash.png'
+                            : 'assets/images/eye.png',
+                        width: 10,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  )
+                : null,
           ),
           const SizedBox(height: 20),
-          const TextFieldHandl(
+          TextFieldHandl(
+            controller: _confirmPasswordController,
             hint: 'Confirm password',
+            suffixIcon: confirmPassword.isNotEmpty
+                ? GestureDetector(
+                    onTap: () => ref
+                        .read(authViewModelProvider.notifier)
+                        .setShowConfirmPassword(!showConfirmPassword),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Image.asset(
+                        !showConfirmPassword
+                            ? 'assets/images/eye-slash.png'
+                            : 'assets/images/eye.png',
+                        width: 10,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  )
+                : null,
+            isObscure: !showConfirmPassword,
           ),
           const SizedBox(height: 10),
           ElevatedButton(

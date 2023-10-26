@@ -18,8 +18,11 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$AuthViewState {
   String get username => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
+  String get confirmPassword => throw _privateConstructorUsedError;
   AuthPageStatus get status => throw _privateConstructorUsedError;
   AuthPageScreen get activeScreen => throw _privateConstructorUsedError;
+  bool get showPassword => throw _privateConstructorUsedError;
+  bool get showConfirmPassword => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -36,8 +39,11 @@ abstract class $AuthViewStateCopyWith<$Res> {
   $Res call(
       {String username,
       String password,
+      String confirmPassword,
       AuthPageStatus status,
       AuthPageScreen activeScreen,
+      bool showPassword,
+      bool showConfirmPassword,
       String? errorMessage});
 }
 
@@ -56,8 +62,11 @@ class _$AuthViewStateCopyWithImpl<$Res, $Val extends AuthViewState>
   $Res call({
     Object? username = null,
     Object? password = null,
+    Object? confirmPassword = null,
     Object? status = null,
     Object? activeScreen = null,
+    Object? showPassword = null,
+    Object? showConfirmPassword = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
@@ -69,6 +78,10 @@ class _$AuthViewStateCopyWithImpl<$Res, $Val extends AuthViewState>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      confirmPassword: null == confirmPassword
+          ? _value.confirmPassword
+          : confirmPassword // ignore: cast_nullable_to_non_nullable
+              as String,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -77,6 +90,14 @@ class _$AuthViewStateCopyWithImpl<$Res, $Val extends AuthViewState>
           ? _value.activeScreen
           : activeScreen // ignore: cast_nullable_to_non_nullable
               as AuthPageScreen,
+      showPassword: null == showPassword
+          ? _value.showPassword
+          : showPassword // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showConfirmPassword: null == showConfirmPassword
+          ? _value.showConfirmPassword
+          : showConfirmPassword // ignore: cast_nullable_to_non_nullable
+              as bool,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -96,8 +117,11 @@ abstract class _$$AuthViewStateImplCopyWith<$Res>
   $Res call(
       {String username,
       String password,
+      String confirmPassword,
       AuthPageStatus status,
       AuthPageScreen activeScreen,
+      bool showPassword,
+      bool showConfirmPassword,
       String? errorMessage});
 }
 
@@ -114,8 +138,11 @@ class __$$AuthViewStateImplCopyWithImpl<$Res>
   $Res call({
     Object? username = null,
     Object? password = null,
+    Object? confirmPassword = null,
     Object? status = null,
     Object? activeScreen = null,
+    Object? showPassword = null,
+    Object? showConfirmPassword = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_$AuthViewStateImpl(
@@ -127,6 +154,10 @@ class __$$AuthViewStateImplCopyWithImpl<$Res>
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as String,
+      confirmPassword: null == confirmPassword
+          ? _value.confirmPassword
+          : confirmPassword // ignore: cast_nullable_to_non_nullable
+              as String,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -135,6 +166,14 @@ class __$$AuthViewStateImplCopyWithImpl<$Res>
           ? _value.activeScreen
           : activeScreen // ignore: cast_nullable_to_non_nullable
               as AuthPageScreen,
+      showPassword: null == showPassword
+          ? _value.showPassword
+          : showPassword // ignore: cast_nullable_to_non_nullable
+              as bool,
+      showConfirmPassword: null == showConfirmPassword
+          ? _value.showConfirmPassword
+          : showConfirmPassword // ignore: cast_nullable_to_non_nullable
+              as bool,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -149,8 +188,11 @@ class _$AuthViewStateImpl implements _AuthViewState {
   const _$AuthViewStateImpl(
       {this.username = '',
       this.password = '',
+      this.confirmPassword = '',
       this.status = AuthPageStatus.initial,
       this.activeScreen = AuthPageScreen.login,
+      this.showPassword = false,
+      this.showConfirmPassword = false,
       this.errorMessage});
 
   @override
@@ -161,16 +203,25 @@ class _$AuthViewStateImpl implements _AuthViewState {
   final String password;
   @override
   @JsonKey()
+  final String confirmPassword;
+  @override
+  @JsonKey()
   final AuthPageStatus status;
   @override
   @JsonKey()
   final AuthPageScreen activeScreen;
   @override
+  @JsonKey()
+  final bool showPassword;
+  @override
+  @JsonKey()
+  final bool showConfirmPassword;
+  @override
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'AuthViewState(username: $username, password: $password, status: $status, activeScreen: $activeScreen, errorMessage: $errorMessage)';
+    return 'AuthViewState(username: $username, password: $password, confirmPassword: $confirmPassword, status: $status, activeScreen: $activeScreen, showPassword: $showPassword, showConfirmPassword: $showConfirmPassword, errorMessage: $errorMessage)';
   }
 
   @override
@@ -182,16 +233,30 @@ class _$AuthViewStateImpl implements _AuthViewState {
                 other.username == username) &&
             (identical(other.password, password) ||
                 other.password == password) &&
+            (identical(other.confirmPassword, confirmPassword) ||
+                other.confirmPassword == confirmPassword) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.activeScreen, activeScreen) ||
                 other.activeScreen == activeScreen) &&
+            (identical(other.showPassword, showPassword) ||
+                other.showPassword == showPassword) &&
+            (identical(other.showConfirmPassword, showConfirmPassword) ||
+                other.showConfirmPassword == showConfirmPassword) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, username, password, status, activeScreen, errorMessage);
+      runtimeType,
+      username,
+      password,
+      confirmPassword,
+      status,
+      activeScreen,
+      showPassword,
+      showConfirmPassword,
+      errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -204,8 +269,11 @@ abstract class _AuthViewState implements AuthViewState {
   const factory _AuthViewState(
       {final String username,
       final String password,
+      final String confirmPassword,
       final AuthPageStatus status,
       final AuthPageScreen activeScreen,
+      final bool showPassword,
+      final bool showConfirmPassword,
       final String? errorMessage}) = _$AuthViewStateImpl;
 
   @override
@@ -213,9 +281,15 @@ abstract class _AuthViewState implements AuthViewState {
   @override
   String get password;
   @override
+  String get confirmPassword;
+  @override
   AuthPageStatus get status;
   @override
   AuthPageScreen get activeScreen;
+  @override
+  bool get showPassword;
+  @override
+  bool get showConfirmPassword;
   @override
   String? get errorMessage;
   @override

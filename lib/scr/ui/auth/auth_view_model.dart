@@ -20,19 +20,32 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     required this.firebaseAuth,
   }) : super(const AuthViewState());
 
-  // setMobileNumber(String mobile) => state = state.copyWith(
-  //       mobile: mobile,
-  //       status: AuthPageStatus.initial,
-  //     );
+  setUsername(String username) => state = state.copyWith(
+        username: username,
+        status: AuthPageStatus.initial,
+      );
 
-  // setOtp(String otp) => state = state.copyWith(
-  //       otp: otp,
-  //       status: AuthPageStatus.initial,
-  //     );
+  setPassword(String password) => state = state.copyWith(
+        password: password,
+        status: AuthPageStatus.initial,
+      );
+  setConfirmPassword(String password) => state = state.copyWith(
+        confirmPassword: password,
+        status: AuthPageStatus.initial,
+      );
 
   setAuthPageScreen(AuthPageScreen screen) => state = state.copyWith(
         activeScreen: screen,
         status: AuthPageStatus.initial,
+        password: '',
+        username: '',
+        confirmPassword: '',
+      );
+
+  setShowPassword(bool value) => state = state.copyWith(showPassword: value);
+
+  setShowConfirmPassword(bool value) => state = state.copyWith(
+        showConfirmPassword: value,
       );
 
   // /// returns whether back navigation should be triggered or not
@@ -171,8 +184,11 @@ class AuthViewState with _$AuthViewState {
   const factory AuthViewState({
     @Default('') String username,
     @Default('') String password,
+    @Default('') String confirmPassword,
     @Default(AuthPageStatus.initial) AuthPageStatus status,
     @Default(AuthPageScreen.login) AuthPageScreen activeScreen,
+    @Default(false) bool showPassword,
+    @Default(false) bool showConfirmPassword,
     String? errorMessage,
   }) = _AuthViewState;
 }
