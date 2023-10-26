@@ -1,9 +1,12 @@
+// ignore_for_file: avoid_print, unused_local_variable
+
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:social_media/scr/repositories/app_repository.dart';
+import 'package:social_media/scr/constants/strings.dart';
 
+import '../../repositories/app_repository.dart';
 import '../../services/firebase_auth.dart';
 
 part 'auth_view_model.freezed.dart';
@@ -72,7 +75,7 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
           .read(appRepositoryProvider.notifier)
           .setAppStatus(AppStatus.authenticatedWithNoUserData);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
+      if (e.code == emailAlreadyInUse) {
         _setError('The account already exists for that email.');
         print('The account already exists for that email.');
       }
@@ -95,12 +98,9 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
           .read(appRepositoryProvider.notifier)
           .setAppStatus(AppStatus.authenticatedWithNoUserData);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        _setError('No user found for that email.');
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        _setError('Wrong password provided for that user.');
-        print('Wrong password provided for that user.');
+      if (e.code == invalidLoginCredentials) {
+        _setError('Invalid Login Credentials');
+        print('Invalid Login Credentials');
       }
     } catch (e) {
       _setError(e.toString());
@@ -116,7 +116,6 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       print('Enter email');
       return false;
     }
-    // TODO: Email validation
     if (!EmailValidator.validate(state.email)) {
       _setError('Enter a valid email');
       print('Enter a valid email');
@@ -147,7 +146,6 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       print('Enter email');
       return false;
     }
-    // TODO: Email validation
     if (!EmailValidator.validate(state.email)) {
       _setError('Enter a valid email');
       print('Enter a valid email');

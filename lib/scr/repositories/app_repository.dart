@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:social_media/scr/models/user_data.dart';
 
 import '../services/cloud_firestore.dart';
 import '../services/firebase_auth.dart';
@@ -35,7 +36,7 @@ class AppRepository extends StateNotifier<AppState> {
             );
           } else {
             // save user auth data in state
-            state = state.copyWith(authUser: user);
+            state = state.copyWith(authUser: user, email: user.email);
             // fetch user's data from server & set state accordingly
             _fetchUserDataAndNavigate();
           }
@@ -170,24 +171,41 @@ class AppRepository extends StateNotifier<AppState> {
 
   setAppStatus(AppStatus status) => state = state.copyWith(status: status);
 
+  setUserData(UserData data) => state = state.copyWith(userData: data);
+
   _fetchUserDataAndNavigate() async {
-    final String? currentUserId = state.authUser?.uid;
+    final String currentUserId = state.authUser!.uid;
     print('current userId: $currentUserId');
 
     final CollectionReference<Map<String, dynamic>> usersCollection =
         firestore.collection('users');
 
-    usersCollection.where('id', isEqualTo: currentUserId).snapshots().listen(
-      (data) {
-        if (data.size == 0) {
+    await usersCollection.doc(currentUserId).get().then(
+      (json) {
+        if (json.data() == null) {
           state = state.copyWith(status: AppStatus.authenticatedWithNoUserData);
           print("User data is not present");
         } else {
-          state = state.copyWith(status: AppStatus.authenticatedWithUserData);
+          state = state.copyWith(
+            status: AppStatus.authenticatedWithUserData,
+            userData: UserData.fromJson(json.data()!),
+          );
           print('User data is present');
         }
       },
     );
+
+    // usersCollection.where('id', isEqualTo: currentUserId).snapshots().listen(
+    //   (data) {
+    //     if (data.size == 0) {
+    //       state = state.copyWith(status: AppStatus.authenticatedWithNoUserData);
+    //       print("User data is not present");
+    //     } else {
+    //       state = state.copyWith(status: AppStatus.authenticatedWithUserData);
+    //       print('User data is present');
+    //     }
+    //   },
+    // );
   }
 
   @override
@@ -201,7 +219,8 @@ class AppRepository extends StateNotifier<AppState> {
 class AppState with _$AppState {
   const factory AppState({
     @Default(null) User? authUser,
-    // @Default(null) UserResponse? userData,
+    @Default(null) String? email,
+    @Default(null) UserData? userData,
     @Default(AppStatus.initial) AppStatus status,
   }) = _AppState;
 }

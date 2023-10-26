@@ -30,7 +30,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
       () {
         ref
             .read(authViewModelProvider.notifier)
-            .setEmail(_emailController.text);
+            .setEmail(_emailController.text.trim());
       },
     );
     _passwordController.addListener(

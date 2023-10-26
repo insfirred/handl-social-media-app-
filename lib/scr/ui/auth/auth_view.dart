@@ -20,17 +20,17 @@ class AuthView extends ConsumerWidget {
     final activeScreen = ref.watch(
       authViewModelProvider.select((_) => _.activeScreen),
     );
-    final appStatus = ref.watch(
-      appRepositoryProvider.select((_) => _.status),
-    );
 
-    ref.listen(appRepositoryProvider, (prev, next) {
-      if (next.status == AppStatus.authenticatedWithUserData) {
-        context.replaceRoute(const HomeRoute());
-      } else if (next.status == AppStatus.authenticatedWithNoUserData) {
-        context.replaceRoute(const CreateUsernameRoute());
-      }
-    });
+    ref.listen(
+      appRepositoryProvider,
+      (prev, next) {
+        if (next.status == AppStatus.authenticatedWithUserData) {
+          context.replaceRoute(const HomeRoute());
+        } else if (next.status == AppStatus.authenticatedWithNoUserData) {
+          context.replaceRoute(const CreateUsernameRoute());
+        }
+      },
+    );
 
     ref.listen(authViewModelProvider, (previous, next) {
       if (next.status == AuthViewStatus.error) {

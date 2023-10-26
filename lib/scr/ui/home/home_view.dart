@@ -19,13 +19,19 @@ class HomeView extends ConsumerWidget {
       },
     );
 
+    final userData = ref.watch(
+      appRepositoryProvider.select((_) => _.userData),
+    )!;
+
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Home View'),
+              Text('Hello ${userData.username}'),
+              const SizedBox(height: 10),
+              Text(userData.email),
               const SizedBox(height: 50),
               ElevatedButton(
                 onPressed: () =>

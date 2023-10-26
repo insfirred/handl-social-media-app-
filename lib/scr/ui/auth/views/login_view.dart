@@ -28,7 +28,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
       () {
         ref
             .read(authViewModelProvider.notifier)
-            .setEmail(_emailController.text);
+            .setEmail(_emailController.text.trim());
       },
     );
     _passwordController.addListener(
