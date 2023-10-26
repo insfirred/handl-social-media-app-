@@ -1,25 +1,29 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../services/cloud_firestore.dart';
 import '../services/firebase_auth.dart';
 
 part 'app_repository.freezed.dart';
 
 final appRepositoryProvider = StateNotifierProvider<AppRepository, AppState>(
   (ref) => AppRepository(
-    firebaseAuth: ref.watch(firebaseAuthProvider),
-  ),
+      firebaseAuth: ref.watch(firebaseAuthProvider),
+      firestore: ref.watch(firestoreProvider)),
 );
 
 class AppRepository extends StateNotifier<AppState> {
   final FirebaseAuth firebaseAuth;
+  final FirebaseFirestore firestore;
   late final StreamSubscription _subscription;
 
   AppRepository({
     required this.firebaseAuth,
+    required this.firestore,
   }) : super(const AppState()) {
     () async {
       await Future.delayed(const Duration(milliseconds: 2000));
@@ -33,9 +37,7 @@ class AppRepository extends StateNotifier<AppState> {
             // save user auth data in state
             state = state.copyWith(authUser: user);
             // fetch user's data from server & set state accordingly
-            state = state.copyWith(
-              status: AppStatus.authenticatedWithUserData,
-            );
+            _fetchUserDataAndNavigate();
           }
         },
       );
@@ -111,9 +113,9 @@ class AppRepository extends StateNotifier<AppState> {
   //   return idToken;
   // }
 
-  // void logout() {
-  //   firebaseAuth.signOut();
-  // }
+  void logout() {
+    firebaseAuth.signOut();
+  }
 
   // /// fetches user data from server & sets the state
   // _fetchUserDataAndSetState(User? user) async {
@@ -167,6 +169,26 @@ class AppRepository extends StateNotifier<AppState> {
   // }
 
   setAppStatus(AppStatus status) => state = state.copyWith(status: status);
+
+  _fetchUserDataAndNavigate() async {
+    final String? currentUserId = state.authUser?.uid;
+    print('current userId: $currentUserId');
+
+    final CollectionReference<Map<String, dynamic>> usersCollection =
+        firestore.collection('users');
+
+    usersCollection.where('id', isEqualTo: currentUserId).snapshots().listen(
+      (data) {
+        if (data.size == 0) {
+          state = state.copyWith(status: AppStatus.authenticatedWithNoUserData);
+          print("User data is not present");
+        } else {
+          state = state.copyWith(status: AppStatus.authenticatedWithUserData);
+          print('User data is present');
+        }
+      },
+    );
+  }
 
   @override
   void dispose() {

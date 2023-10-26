@@ -83,7 +83,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
           ),
           const SizedBox(height: 10),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () => ref.read(authViewModelProvider.notifier).login(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
               child: Text(

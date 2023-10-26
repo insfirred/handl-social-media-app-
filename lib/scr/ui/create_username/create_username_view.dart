@@ -10,7 +10,7 @@ class CreateUsernameView extends StatelessWidget {
     return const Scaffold(
       body: SafeArea(
         child: Center(
-          child: Text('Home View'),
+          child: Text('Create Username View'),
         ),
       ),
     );

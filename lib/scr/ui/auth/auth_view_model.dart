@@ -60,6 +60,7 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
   setAuthViewStatus(AuthViewStatus status) =>
       state = state.copyWith(status: status);
 
+  /// creates a user account in firebase auth
   register() async {
     if (!_validationOnRegister()) return;
     try {
@@ -80,6 +81,32 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
       print(e);
     }
     print('No validation error, initiating registration!!!');
+  }
+
+  /// login user in app
+  login() async {
+    if (!_validationOnLogin()) return;
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: state.email,
+        password: state.password,
+      );
+      ref
+          .read(appRepositoryProvider.notifier)
+          .setAppStatus(AppStatus.authenticatedWithNoUserData);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        _setError('No user found for that email.');
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        _setError('Wrong password provided for that user.');
+        print('Wrong password provided for that user.');
+      }
+    } catch (e) {
+      _setError(e.toString());
+      print(e);
+    }
+    print('No validation error, initiating login!!!');
   }
 
   /// returns true if there is no validation error
@@ -108,6 +135,32 @@ class AuthViewModel extends StateNotifier<AuthViewState> {
     if (state.password != state.confirmPassword) {
       _setError('Confirm password doesn\'t matches');
       print('Confirm password doesn\'t matches');
+      return false;
+    }
+    return true;
+  }
+
+  /// returns true if there is no validation error
+  bool _validationOnLogin() {
+    if (state.email.isEmpty) {
+      _setError('Enter email');
+      print('Enter email');
+      return false;
+    }
+    // TODO: Email validation
+    if (!EmailValidator.validate(state.email)) {
+      _setError('Enter a valid email');
+      print('Enter a valid email');
+      return false;
+    }
+    if (state.password.isEmpty) {
+      _setError('Enter password');
+      print('Enter password');
+      return false;
+    }
+    if (state.password.length < 6 || state.password.length > 14) {
+      _setError('Enter a password of length of 4 - 16 characters.');
+      print('Enter a password of length of 4 - 16 characters.');
       return false;
     }
     return true;
