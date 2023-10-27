@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 
 import '../ui/auth/auth_view.dart';
+import '../ui/chat/chats_view.dart';
 import '../ui/create_username/create_username_view.dart';
+import '../ui/home/home_view.dart';
 import '../ui/main/main_view.dart';
+import '../ui/profile/profile_view.dart';
 import '../ui/splash/splash_view.dart';
 
 part 'app_router.gr.dart';
@@ -16,10 +19,20 @@ class AppRouter extends _$AppRouter {
           path: '/',
           page: SplashRoute.page,
         ),
-        AutoRoute(
-          path: '/main',
-          page: MainRoute.page,
-        ),
+        AutoRoute(path: '/main', page: MainRoute.page, children: [
+          AutoRoute(
+            path: 'home',
+            page: HomeRoute.page,
+          ),
+          AutoRoute(
+            path: 'profile',
+            page: ChatsRoute.page,
+          ),
+          AutoRoute(
+            path: 'chats',
+            page: ProfileRoute.page,
+          ),
+        ]),
         AutoRoute(
           path: '/auth',
           page: AuthRoute.page,

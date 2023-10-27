@@ -21,16 +21,34 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AuthView(),
       );
     },
+    ChatsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ChatsView(),
+      );
+    },
     CreateUsernameRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const CreateUsernameView(),
       );
     },
+    HomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HomeView(),
+      );
+    },
     MainRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const MainView(),
+      );
+    },
+    ProfileRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfileView(),
       );
     },
     SplashRoute.name: (routeData) {
@@ -57,6 +75,20 @@ class AuthRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ChatsView]
+class ChatsRoute extends PageRouteInfo<void> {
+  const ChatsRoute({List<PageRouteInfo>? children})
+      : super(
+          ChatsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ChatsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [CreateUsernameView]
 class CreateUsernameRoute extends PageRouteInfo<void> {
   const CreateUsernameRoute({List<PageRouteInfo>? children})
@@ -71,6 +103,20 @@ class CreateUsernameRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [HomeView]
+class HomeRoute extends PageRouteInfo<void> {
+  const HomeRoute({List<PageRouteInfo>? children})
+      : super(
+          HomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [MainView]
 class MainRoute extends PageRouteInfo<void> {
   const MainRoute({List<PageRouteInfo>? children})
@@ -80,6 +126,20 @@ class MainRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'MainRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfileView]
+class ProfileRoute extends PageRouteInfo<void> {
+  const ProfileRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfileRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfileRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
