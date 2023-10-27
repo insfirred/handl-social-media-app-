@@ -5,8 +5,8 @@ import 'package:social_media/scr/repositories/app_repository.dart';
 import 'package:social_media/scr/routing/app_router.dart';
 
 @RoutePage()
-class HomeView extends ConsumerWidget {
-  const HomeView({super.key});
+class MainView extends ConsumerWidget {
+  const MainView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

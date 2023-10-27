@@ -27,10 +27,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const CreateUsernameView(),
       );
     },
-    HomeRoute.name: (routeData) {
+    MainRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const HomeView(),
+        child: const MainView(),
       );
     },
     SplashRoute.name: (routeData) {
@@ -71,15 +71,15 @@ class CreateUsernameRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [HomeView]
-class HomeRoute extends PageRouteInfo<void> {
-  const HomeRoute({List<PageRouteInfo>? children})
+/// [MainView]
+class MainRoute extends PageRouteInfo<void> {
+  const MainRoute({List<PageRouteInfo>? children})
       : super(
-          HomeRoute.name,
+          MainRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'HomeRoute';
+  static const String name = 'MainRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

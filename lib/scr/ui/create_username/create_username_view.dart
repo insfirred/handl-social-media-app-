@@ -39,7 +39,7 @@ class _CreateUsernameViewState extends ConsumerState<CreateUsernameView> {
       appRepositoryProvider,
       (prev, next) {
         if (next.status == AppStatus.authenticatedWithUserData) {
-          context.replaceRoute(const HomeRoute());
+          context.replaceRoute(const MainRoute());
         }
       },
     );

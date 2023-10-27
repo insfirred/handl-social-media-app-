@@ -30,16 +30,22 @@ class AppRepository extends StateNotifier<AppState> {
       await Future.delayed(const Duration(milliseconds: 2000));
       _subscription = firebaseAuth.authStateChanges().listen(
         (user) async {
+          AppStatus currentStatus = AppStatus.initial;
           if (user == null) {
-            state = state.copyWith(
-              status: AppStatus.unauthenticated,
-            );
+            // state = state.copyWith(
+            //   status: AppStatus.unauthenticated,
+            // );
+            currentStatus = AppStatus.unauthenticated;
           } else {
             // save user auth data in state
-            state = state.copyWith(authUser: user, email: user.email);
+            state = state.copyWith(
+              authUser: user,
+              email: user.email,
+            );
             // fetch user's data from server & set state accordingly
-            _fetchUserDataAndNavigate();
+            currentStatus = await _fetchUserDataAndNavigate();
           }
+          state = state.copyWith(status: currentStatus);
         },
       );
     }();
@@ -173,7 +179,8 @@ class AppRepository extends StateNotifier<AppState> {
 
   setUserData(UserData data) => state = state.copyWith(userData: data);
 
-  _fetchUserDataAndNavigate() async {
+  Future<AppStatus> _fetchUserDataAndNavigate() async {
+    AppStatus currentStatus = AppStatus.initial;
     final String currentUserId = state.authUser!.uid;
     print('current userId: $currentUserId');
 
@@ -183,29 +190,20 @@ class AppRepository extends StateNotifier<AppState> {
     await usersCollection.doc(currentUserId).get().then(
       (json) {
         if (json.data() == null) {
-          state = state.copyWith(status: AppStatus.authenticatedWithNoUserData);
+          // state = state.copyWith(status: AppStatus.authenticatedWithNoUserData);
           print("User data is not present");
+          currentStatus = AppStatus.authenticatedWithNoUserData;
         } else {
           state = state.copyWith(
-            status: AppStatus.authenticatedWithUserData,
+            // status: AppStatus.authenticatedWithUserData,
             userData: UserData.fromJson(json.data()!),
           );
           print('User data is present');
+          currentStatus = AppStatus.authenticatedWithUserData;
         }
       },
     );
-
-    // usersCollection.where('id', isEqualTo: currentUserId).snapshots().listen(
-    //   (data) {
-    //     if (data.size == 0) {
-    //       state = state.copyWith(status: AppStatus.authenticatedWithNoUserData);
-    //       print("User data is not present");
-    //     } else {
-    //       state = state.copyWith(status: AppStatus.authenticatedWithUserData);
-    //       print('User data is present');
-    //     }
-    //   },
-    // );
+    return currentStatus;
   }
 
   @override

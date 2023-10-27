@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 
 import '../ui/auth/auth_view.dart';
 import '../ui/create_username/create_username_view.dart';
-import '../ui/home/home_view.dart';
+import '../ui/main/main_view.dart';
 import '../ui/splash/splash_view.dart';
 
 part 'app_router.gr.dart';
@@ -17,8 +17,8 @@ class AppRouter extends _$AppRouter {
           page: SplashRoute.page,
         ),
         AutoRoute(
-          path: '/home',
-          page: HomeRoute.page,
+          path: '/main',
+          page: MainRoute.page,
         ),
         AutoRoute(
           path: '/auth',

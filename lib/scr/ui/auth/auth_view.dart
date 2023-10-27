@@ -25,7 +25,7 @@ class AuthView extends ConsumerWidget {
       appRepositoryProvider,
       (prev, next) {
         if (next.status == AppStatus.authenticatedWithUserData) {
-          context.replaceRoute(const HomeRoute());
+          context.replaceRoute(const MainRoute());
         } else if (next.status == AppStatus.authenticatedWithNoUserData) {
           context.replaceRoute(const CreateUsernameRoute());
         }
