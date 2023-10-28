@@ -51,6 +51,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProfileView(),
       );
     },
+    SingleChatRoute.name: (routeData) {
+      final args = routeData.argsAs<SingleChatRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: SingleChatView(
+          key: args.key,
+          chatUser: args.chatUser,
+        ),
+      );
+    },
     SplashRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -142,6 +152,44 @@ class ProfileRoute extends PageRouteInfo<void> {
   static const String name = 'ProfileRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [SingleChatView]
+class SingleChatRoute extends PageRouteInfo<SingleChatRouteArgs> {
+  SingleChatRoute({
+    Key? key,
+    required UserData chatUser,
+    List<PageRouteInfo>? children,
+  }) : super(
+          SingleChatRoute.name,
+          args: SingleChatRouteArgs(
+            key: key,
+            chatUser: chatUser,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SingleChatRoute';
+
+  static const PageInfo<SingleChatRouteArgs> page =
+      PageInfo<SingleChatRouteArgs>(name);
+}
+
+class SingleChatRouteArgs {
+  const SingleChatRouteArgs({
+    this.key,
+    required this.chatUser,
+  });
+
+  final Key? key;
+
+  final UserData chatUser;
+
+  @override
+  String toString() {
+    return 'SingleChatRouteArgs{key: $key, chatUser: $chatUser}';
+  }
 }
 
 /// generated route for

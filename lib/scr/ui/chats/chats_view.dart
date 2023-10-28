@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/scr/models/user_data.dart';
-import 'package:social_media/scr/ui/chat/chats_view_model.dart';
+import 'package:social_media/scr/routing/app_router.dart';
+import 'package:social_media/scr/ui/chats/chats_view_model.dart';
 
 import '../../utils/bottom_sheet_utils.dart';
 
@@ -93,34 +94,40 @@ class UserChatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(bottom: 15),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFDFDF),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 10,
-            spreadRadius: 2,
-            color: Color.fromARGB(25, 0, 0, 0),
-            offset: Offset(2, 2),
-          ),
-        ],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            userData.username,
-            style: GoogleFonts.dosis(fontWeight: FontWeight.bold),
-          ),
-          Text(
-            userData.email,
-            style: GoogleFonts.dosis(color: Colors.grey[700]),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () {
+        context.popRoute();
+        context.router.push(SingleChatRoute(chatUser: userData));
+      },
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(bottom: 15),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFDFDF),
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 10,
+              spreadRadius: 2,
+              color: Color.fromARGB(25, 0, 0, 0),
+              offset: Offset(2, 2),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              userData.username,
+              style: GoogleFonts.dosis(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              userData.email,
+              style: GoogleFonts.dosis(color: Colors.grey[700]),
+            ),
+          ],
+        ),
       ),
     );
   }
