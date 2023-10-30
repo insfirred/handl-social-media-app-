@@ -80,20 +80,24 @@ class SingleChatViewModel extends StateNotifier<SingleChatViewState> {
           .listen(
         (snapshot) {
           if (snapshot.exists) {
-            print(snapshot);
             List messagesListJson = snapshot.data()!['list'];
             List<Message> messagesList =
                 messagesListJson.map((json) => Message.fromJson(json)).toList();
 
+            // sorting the list according to time
             messagesList.sort(
               (a, b) => a.createdAt.compareTo(b.createdAt),
             );
+
+            // reversing the list
+            messagesList = List.from(messagesList.reversed);
+
             state = state.copyWith(
               messagesList: messagesList,
               status: SingleChatViewStatus.loaded,
             );
           } else {
-            print('snap doesnt exists');
+            state = state.copyWith(status: SingleChatViewStatus.loaded);
           }
         },
       );

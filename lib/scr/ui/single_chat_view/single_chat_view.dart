@@ -24,8 +24,6 @@ class SingleChatView extends ConsumerStatefulWidget {
 }
 
 class _SingleChatViewState extends ConsumerState<SingleChatView> {
-  // final ScrollController scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -65,9 +63,7 @@ class _SingleChatViewState extends ConsumerState<SingleChatView> {
       ),
       body: Column(
         children: [
-          ChatsListWidget(
-              // scrollController: scrollController,
-              ),
+          ChatsListWidget(),
           InputSection(
             chatUser: chatUser,
             // scrollController: scrollController,
@@ -185,15 +181,11 @@ class _InputSectionState extends ConsumerState<InputSection> {
 }
 
 class ChatsListWidget extends ConsumerWidget {
-  const ChatsListWidget({
-    super.key,
-    // required this.scrollController,
-  });
-
-  // final ScrollController scrollController;
+  const ChatsListWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ScrollController scrollController = ScrollController();
     final messagesList = ref.watch(
       singleChatViewModelProvider.select((_) => _.messagesList),
     );
@@ -202,12 +194,24 @@ class ChatsListWidget extends ConsumerWidget {
       singleChatViewModelProvider.select((_) => _.status),
     );
 
-    // ref.listen(singleChatViewModelProvider, (prev, next) {
-    //   if (next.messagesList != prev?.messagesList) {
-    //     print('new size is: ');
-    //     print(messagesList.length);
-    //   }
-    // });
+    void scrollDown() {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 5),
+          curve: Curves.linear,
+        );
+      }
+    }
+
+    ref.listen(
+      singleChatViewModelProvider,
+      (previous, next) {
+        if (previous?.messagesList != next.messagesList) {
+          scrollDown();
+        }
+      },
+    );
 
     return status == SingleChatViewStatus.loading
         ? const Expanded(
@@ -225,18 +229,18 @@ class ChatsListWidget extends ConsumerWidget {
                 ),
               )
             : Expanded(
-                child: SingleChildScrollView(
-                  // controller: scrollController,
-                  child: Column(
-                    children: messagesList.map((message) {
-                      final String uid =
-                          ref.read(appRepositoryProvider).authUser!.uid;
-                      return MessageCard(
-                        message: message,
-                        selfCreated: message.from == uid,
-                      );
-                    }).toList(),
-                  ),
+                child: ListView.builder(
+                  reverse: true,
+                  itemCount: messagesList.length,
+                  itemBuilder: (context, index) {
+                    Message message = messagesList[index];
+                    final String uid =
+                        ref.read(appRepositoryProvider).authUser!.uid;
+                    return MessageCard(
+                      message: message,
+                      selfCreated: message.from == uid,
+                    );
+                  },
                 ),
               );
   }
