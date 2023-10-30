@@ -21,8 +21,9 @@ class ChatsView extends ConsumerWidget {
       body: const SafeArea(
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('data'),
+              Text('Recent Chatties'),
             ],
           ),
         ),

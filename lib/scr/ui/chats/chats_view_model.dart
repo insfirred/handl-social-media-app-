@@ -62,6 +62,31 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
     }
   }
 
+  // _fetchRecentChatUsers() async {
+  //   state = state.copyWith(status: ChatsViewStatus.loading);
+  //   try {
+  //     final usersCollection = firestore.collection('chats');
+  //     await usersCollection.get().then(
+  //       (data) {
+  //         List<UserData> recentChatUuserDataList = data.docs
+  //             .map((snapshot) => UserData.fromJson(snapshot.data()))
+  //             .toList();
+
+  //         // removing the self from the list
+  //         userDataList.removeWhere((element) =>
+  //             element.id == ref.read(appRepositoryProvider).authUser!.uid);
+
+  //         state = state.copyWith(
+  //           userDataList: userDataList,
+  //           status: ChatsViewStatus.loaded,
+  //         );
+  //       },
+  //     );
+  //   } catch (e) {
+  //     _setError(e.toString());
+  //   }
+  // }
+
   _setError(String? error) => state = state.copyWith(
         errorMessage: error,
         status: ChatsViewStatus.error,
@@ -73,6 +98,7 @@ class ChatsViewState with _$ChatsViewState {
   const factory ChatsViewState({
     @Default(ChatsViewStatus.initial) ChatsViewStatus status,
     @Default([]) List<UserData> userDataList,
+    @Default([]) List<UserData> recentChatUsers,
     UserData? selectedChatUser,
     String? errorMessage,
   }) = _ChatsViewState;

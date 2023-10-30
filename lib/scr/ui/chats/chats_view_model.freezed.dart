@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ChatsViewState {
   ChatsViewStatus get status => throw _privateConstructorUsedError;
   List<UserData> get userDataList => throw _privateConstructorUsedError;
+  List<UserData> get recentChatUsers => throw _privateConstructorUsedError;
   UserData? get selectedChatUser => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
@@ -35,6 +36,7 @@ abstract class $ChatsViewStateCopyWith<$Res> {
   $Res call(
       {ChatsViewStatus status,
       List<UserData> userDataList,
+      List<UserData> recentChatUsers,
       UserData? selectedChatUser,
       String? errorMessage});
 }
@@ -54,6 +56,7 @@ class _$ChatsViewStateCopyWithImpl<$Res, $Val extends ChatsViewState>
   $Res call({
     Object? status = null,
     Object? userDataList = null,
+    Object? recentChatUsers = null,
     Object? selectedChatUser = freezed,
     Object? errorMessage = freezed,
   }) {
@@ -65,6 +68,10 @@ class _$ChatsViewStateCopyWithImpl<$Res, $Val extends ChatsViewState>
       userDataList: null == userDataList
           ? _value.userDataList
           : userDataList // ignore: cast_nullable_to_non_nullable
+              as List<UserData>,
+      recentChatUsers: null == recentChatUsers
+          ? _value.recentChatUsers
+          : recentChatUsers // ignore: cast_nullable_to_non_nullable
               as List<UserData>,
       selectedChatUser: freezed == selectedChatUser
           ? _value.selectedChatUser
@@ -89,6 +96,7 @@ abstract class _$$ChatsViewStateImplCopyWith<$Res>
   $Res call(
       {ChatsViewStatus status,
       List<UserData> userDataList,
+      List<UserData> recentChatUsers,
       UserData? selectedChatUser,
       String? errorMessage});
 }
@@ -106,6 +114,7 @@ class __$$ChatsViewStateImplCopyWithImpl<$Res>
   $Res call({
     Object? status = null,
     Object? userDataList = null,
+    Object? recentChatUsers = null,
     Object? selectedChatUser = freezed,
     Object? errorMessage = freezed,
   }) {
@@ -117,6 +126,10 @@ class __$$ChatsViewStateImplCopyWithImpl<$Res>
       userDataList: null == userDataList
           ? _value._userDataList
           : userDataList // ignore: cast_nullable_to_non_nullable
+              as List<UserData>,
+      recentChatUsers: null == recentChatUsers
+          ? _value._recentChatUsers
+          : recentChatUsers // ignore: cast_nullable_to_non_nullable
               as List<UserData>,
       selectedChatUser: freezed == selectedChatUser
           ? _value.selectedChatUser
@@ -136,9 +149,11 @@ class _$ChatsViewStateImpl implements _ChatsViewState {
   const _$ChatsViewStateImpl(
       {this.status = ChatsViewStatus.initial,
       final List<UserData> userDataList = const [],
+      final List<UserData> recentChatUsers = const [],
       this.selectedChatUser,
       this.errorMessage})
-      : _userDataList = userDataList;
+      : _userDataList = userDataList,
+        _recentChatUsers = recentChatUsers;
 
   @override
   @JsonKey()
@@ -152,6 +167,15 @@ class _$ChatsViewStateImpl implements _ChatsViewState {
     return EqualUnmodifiableListView(_userDataList);
   }
 
+  final List<UserData> _recentChatUsers;
+  @override
+  @JsonKey()
+  List<UserData> get recentChatUsers {
+    if (_recentChatUsers is EqualUnmodifiableListView) return _recentChatUsers;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_recentChatUsers);
+  }
+
   @override
   final UserData? selectedChatUser;
   @override
@@ -159,7 +183,7 @@ class _$ChatsViewStateImpl implements _ChatsViewState {
 
   @override
   String toString() {
-    return 'ChatsViewState(status: $status, userDataList: $userDataList, selectedChatUser: $selectedChatUser, errorMessage: $errorMessage)';
+    return 'ChatsViewState(status: $status, userDataList: $userDataList, recentChatUsers: $recentChatUsers, selectedChatUser: $selectedChatUser, errorMessage: $errorMessage)';
   }
 
   @override
@@ -170,6 +194,8 @@ class _$ChatsViewStateImpl implements _ChatsViewState {
             (identical(other.status, status) || other.status == status) &&
             const DeepCollectionEquality()
                 .equals(other._userDataList, _userDataList) &&
+            const DeepCollectionEquality()
+                .equals(other._recentChatUsers, _recentChatUsers) &&
             (identical(other.selectedChatUser, selectedChatUser) ||
                 other.selectedChatUser == selectedChatUser) &&
             (identical(other.errorMessage, errorMessage) ||
@@ -181,6 +207,7 @@ class _$ChatsViewStateImpl implements _ChatsViewState {
       runtimeType,
       status,
       const DeepCollectionEquality().hash(_userDataList),
+      const DeepCollectionEquality().hash(_recentChatUsers),
       selectedChatUser,
       errorMessage);
 
@@ -196,6 +223,7 @@ abstract class _ChatsViewState implements ChatsViewState {
   const factory _ChatsViewState(
       {final ChatsViewStatus status,
       final List<UserData> userDataList,
+      final List<UserData> recentChatUsers,
       final UserData? selectedChatUser,
       final String? errorMessage}) = _$ChatsViewStateImpl;
 
@@ -203,6 +231,8 @@ abstract class _ChatsViewState implements ChatsViewState {
   ChatsViewStatus get status;
   @override
   List<UserData> get userDataList;
+  @override
+  List<UserData> get recentChatUsers;
   @override
   UserData? get selectedChatUser;
   @override
