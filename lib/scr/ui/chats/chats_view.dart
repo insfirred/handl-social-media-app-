@@ -84,7 +84,7 @@ class NewChatBottomSheet extends ConsumerWidget {
   }
 }
 
-class UserChatCard extends StatelessWidget {
+class UserChatCard extends ConsumerWidget {
   const UserChatCard({
     super.key,
     required this.userData,
@@ -93,10 +93,13 @@ class UserChatCard extends StatelessWidget {
   final UserData userData;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
         context.popRoute();
+        ref
+            .read(chatsViewModelProvider.notifier)
+            .setChatUserForSingleChatViewModel(userData);
         context.router.push(SingleChatRoute(chatUser: userData));
       },
       child: Container(

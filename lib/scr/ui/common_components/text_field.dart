@@ -8,17 +8,30 @@ class TextFieldHandl extends StatelessWidget {
     required this.controller,
     this.isObscure = false,
     this.suffixIcon,
+    this.leftPadding = 50,
+    this.rightPadding = 50,
+    this.topPadding = 0,
+    this.bottomPadding = 0,
   });
 
   final String? hint;
   final TextEditingController controller;
   final bool isObscure;
   final Widget? suffixIcon;
+  final double leftPadding;
+  final double rightPadding;
+  final double topPadding;
+  final double bottomPadding;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 50),
+      padding: EdgeInsets.only(
+        left: leftPadding,
+        right: rightPadding,
+        top: topPadding,
+        bottom: bottomPadding,
+      ),
       child: TextField(
         controller: controller,
         obscureText: isObscure,

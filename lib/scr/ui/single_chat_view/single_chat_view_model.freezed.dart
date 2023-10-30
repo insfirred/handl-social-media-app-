@@ -17,7 +17,9 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$SingleChatViewState {
   UserData? get chatUser => throw _privateConstructorUsedError;
-  SingleUsernameViewStatus get status => throw _privateConstructorUsedError;
+  String? get textFieldValue => throw _privateConstructorUsedError;
+  List<Message> get messagesList => throw _privateConstructorUsedError;
+  SingleChatViewStatus get status => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -33,7 +35,9 @@ abstract class $SingleChatViewStateCopyWith<$Res> {
   @useResult
   $Res call(
       {UserData? chatUser,
-      SingleUsernameViewStatus status,
+      String? textFieldValue,
+      List<Message> messagesList,
+      SingleChatViewStatus status,
       String? errorMessage});
 }
 
@@ -51,6 +55,8 @@ class _$SingleChatViewStateCopyWithImpl<$Res, $Val extends SingleChatViewState>
   @override
   $Res call({
     Object? chatUser = freezed,
+    Object? textFieldValue = freezed,
+    Object? messagesList = null,
     Object? status = null,
     Object? errorMessage = freezed,
   }) {
@@ -59,10 +65,18 @@ class _$SingleChatViewStateCopyWithImpl<$Res, $Val extends SingleChatViewState>
           ? _value.chatUser
           : chatUser // ignore: cast_nullable_to_non_nullable
               as UserData?,
+      textFieldValue: freezed == textFieldValue
+          ? _value.textFieldValue
+          : textFieldValue // ignore: cast_nullable_to_non_nullable
+              as String?,
+      messagesList: null == messagesList
+          ? _value.messagesList
+          : messagesList // ignore: cast_nullable_to_non_nullable
+              as List<Message>,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as SingleUsernameViewStatus,
+              as SingleChatViewStatus,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -81,7 +95,9 @@ abstract class _$$SingleChatViewStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {UserData? chatUser,
-      SingleUsernameViewStatus status,
+      String? textFieldValue,
+      List<Message> messagesList,
+      SingleChatViewStatus status,
       String? errorMessage});
 }
 
@@ -97,6 +113,8 @@ class __$$SingleChatViewStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? chatUser = freezed,
+    Object? textFieldValue = freezed,
+    Object? messagesList = null,
     Object? status = null,
     Object? errorMessage = freezed,
   }) {
@@ -105,10 +123,18 @@ class __$$SingleChatViewStateImplCopyWithImpl<$Res>
           ? _value.chatUser
           : chatUser // ignore: cast_nullable_to_non_nullable
               as UserData?,
+      textFieldValue: freezed == textFieldValue
+          ? _value.textFieldValue
+          : textFieldValue // ignore: cast_nullable_to_non_nullable
+              as String?,
+      messagesList: null == messagesList
+          ? _value._messagesList
+          : messagesList // ignore: cast_nullable_to_non_nullable
+              as List<Message>,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as SingleUsernameViewStatus,
+              as SingleChatViewStatus,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -122,20 +148,34 @@ class __$$SingleChatViewStateImplCopyWithImpl<$Res>
 class _$SingleChatViewStateImpl implements _SingleChatViewState {
   const _$SingleChatViewStateImpl(
       {this.chatUser,
-      this.status = SingleUsernameViewStatus.initial,
-      this.errorMessage});
+      this.textFieldValue,
+      final List<Message> messagesList = const [],
+      this.status = SingleChatViewStatus.initial,
+      this.errorMessage})
+      : _messagesList = messagesList;
 
   @override
   final UserData? chatUser;
   @override
+  final String? textFieldValue;
+  final List<Message> _messagesList;
+  @override
   @JsonKey()
-  final SingleUsernameViewStatus status;
+  List<Message> get messagesList {
+    if (_messagesList is EqualUnmodifiableListView) return _messagesList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_messagesList);
+  }
+
+  @override
+  @JsonKey()
+  final SingleChatViewStatus status;
   @override
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'SingleChatViewState(chatUser: $chatUser, status: $status, errorMessage: $errorMessage)';
+    return 'SingleChatViewState(chatUser: $chatUser, textFieldValue: $textFieldValue, messagesList: $messagesList, status: $status, errorMessage: $errorMessage)';
   }
 
   @override
@@ -145,13 +185,18 @@ class _$SingleChatViewStateImpl implements _SingleChatViewState {
             other is _$SingleChatViewStateImpl &&
             (identical(other.chatUser, chatUser) ||
                 other.chatUser == chatUser) &&
+            (identical(other.textFieldValue, textFieldValue) ||
+                other.textFieldValue == textFieldValue) &&
+            const DeepCollectionEquality()
+                .equals(other._messagesList, _messagesList) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, chatUser, status, errorMessage);
+  int get hashCode => Object.hash(runtimeType, chatUser, textFieldValue,
+      const DeepCollectionEquality().hash(_messagesList), status, errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -164,13 +209,19 @@ class _$SingleChatViewStateImpl implements _SingleChatViewState {
 abstract class _SingleChatViewState implements SingleChatViewState {
   const factory _SingleChatViewState(
       {final UserData? chatUser,
-      final SingleUsernameViewStatus status,
+      final String? textFieldValue,
+      final List<Message> messagesList,
+      final SingleChatViewStatus status,
       final String? errorMessage}) = _$SingleChatViewStateImpl;
 
   @override
   UserData? get chatUser;
   @override
-  SingleUsernameViewStatus get status;
+  String? get textFieldValue;
+  @override
+  List<Message> get messagesList;
+  @override
+  SingleChatViewStatus get status;
   @override
   String? get errorMessage;
   @override

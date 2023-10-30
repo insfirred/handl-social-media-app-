@@ -30,6 +30,9 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
     _fetchAllUsers();
   }
 
+  setChatUserForSingleChatViewModel(UserData user) =>
+      state = state.copyWith(selectedChatUser: user);
+
   _fetchAllUsers() async {
     state = state.copyWith(status: ChatsViewStatus.loading);
     try {
@@ -61,6 +64,7 @@ class ChatsViewState with _$ChatsViewState {
   const factory ChatsViewState({
     @Default(ChatsViewStatus.initial) ChatsViewStatus status,
     @Default([]) List<UserData> userDataList,
+    UserData? selectedChatUser,
     String? errorMessage,
   }) = _ChatsViewState;
 }
