@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:social_media/scr/models/user_data.dart';
+import 'package:social_media/scr/repositories/app_repository.dart';
 import 'package:social_media/scr/services/cloud_firestore.dart';
 
 import '../../services/firebase_auth.dart';
@@ -16,16 +17,19 @@ final chatsViewModelProvider =
   (ref) => ChatsViewModel(
     firebaseAuth: ref.watch(firebaseAuthProvider),
     firestore: ref.watch(firestoreProvider),
+    ref: ref,
   ),
 );
 
 class ChatsViewModel extends StateNotifier<ChatsViewState> {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
+  final StateNotifierProviderRef ref;
 
   ChatsViewModel({
     required this.firebaseAuth,
     required this.firestore,
+    required this.ref,
   }) : super(const ChatsViewState()) {
     _fetchAllUsers();
   }
@@ -42,6 +46,11 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
           List<UserData> userDataList = data.docs
               .map((snapshot) => UserData.fromJson(snapshot.data()))
               .toList();
+
+          // removing the self from the list
+          userDataList.removeWhere((element) =>
+              element.id == ref.read(appRepositoryProvider).authUser!.uid);
+
           state = state.copyWith(
             userDataList: userDataList,
             status: ChatsViewStatus.loaded,

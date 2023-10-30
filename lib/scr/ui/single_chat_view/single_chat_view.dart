@@ -185,32 +185,12 @@ class ChatsListWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ScrollController scrollController = ScrollController();
     final messagesList = ref.watch(
       singleChatViewModelProvider.select((_) => _.messagesList),
     );
 
     final status = ref.watch(
       singleChatViewModelProvider.select((_) => _.status),
-    );
-
-    void scrollDown() {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 5),
-          curve: Curves.linear,
-        );
-      }
-    }
-
-    ref.listen(
-      singleChatViewModelProvider,
-      (previous, next) {
-        if (previous?.messagesList != next.messagesList) {
-          scrollDown();
-        }
-      },
     );
 
     return status == SingleChatViewStatus.loading
