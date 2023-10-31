@@ -18,7 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ChatsViewState {
   ChatsViewStatus get status => throw _privateConstructorUsedError;
   List<UserData> get userDataList => throw _privateConstructorUsedError;
-  List<ChatData> get recentChats => throw _privateConstructorUsedError;
+  List<ChatData> get recentChats =>
+      throw _privateConstructorUsedError; // @Default(0) int refreshCounter,
   UserData? get selectedChatUser => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
@@ -176,6 +177,7 @@ class _$ChatsViewStateImpl implements _ChatsViewState {
     return EqualUnmodifiableListView(_recentChats);
   }
 
+// @Default(0) int refreshCounter,
   @override
   final UserData? selectedChatUser;
   @override
@@ -233,7 +235,7 @@ abstract class _ChatsViewState implements ChatsViewState {
   List<UserData> get userDataList;
   @override
   List<ChatData> get recentChats;
-  @override
+  @override // @Default(0) int refreshCounter,
   UserData? get selectedChatUser;
   @override
   String? get errorMessage;

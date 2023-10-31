@@ -23,30 +23,38 @@ class ChatsView extends ConsumerWidget {
     final recentChats = ref.watch(
       chatsViewModelProvider.select((_) => _.recentChats),
     );
-    return Scaffold(
-      body: SafeArea(
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 30,
-          ),
-          itemCount: recentChats.length,
-          itemBuilder: (context, index) => RecentChatCard(
-            chatData: recentChats[index],
-          ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showHandlBottomSheet(
-          context: context,
-          builder: (context) => NewChatBottomSheet(userDataList: userDataList),
-        ),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
+    final status = ref.watch(
+      chatsViewModelProvider.select((_) => _.status),
     );
+    return status == ChatsViewStatus.loading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            body: SafeArea(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 30,
+                ),
+                itemCount: recentChats.length,
+                itemBuilder: (context, index) => RecentChatCard(
+                  chatData: recentChats[index],
+                ),
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => showHandlBottomSheet(
+                context: context,
+                builder: (context) =>
+                    NewChatBottomSheet(userDataList: userDataList),
+              ),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+            ),
+          );
   }
 }
 
@@ -180,8 +188,29 @@ class RecentChatCard extends ConsumerWidget {
       chatUserName = chatData.user2;
     }
 
+    final selfUid = ref.read(appRepositoryProvider).userData!.id;
+    String chatUserUid = chatData.lastMessage.from;
+
+    if (chatUserUid == selfUid) {
+      chatUserUid = chatData.lastMessage.to;
+    }
+
+    final userDataList = ref.watch(
+      chatsViewModelProvider.select((_) => _.userDataList),
+    );
+
+    final chatUserData = userDataList
+        .where((userData) => userData.id == chatUserUid)
+        .toList()
+        .first;
+
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        ref
+            .read(chatsViewModelProvider.notifier)
+            .setChatUserForSingleChatViewModel(chatUserData);
+        context.router.push(SingleChatRoute(chatUser: chatUserData));
+      },
       child: Container(
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.only(bottom: 15),

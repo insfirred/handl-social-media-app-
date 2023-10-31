@@ -65,6 +65,7 @@ class SingleChatViewModel extends StateNotifier<SingleChatViewState> {
               messagesList: messagesList,
               status: SingleChatViewStatus.loaded,
             );
+            ref.read(chatsViewModelProvider.notifier).refreshChatView();
           } else {
             state = state.copyWith(status: SingleChatViewStatus.loaded);
           }

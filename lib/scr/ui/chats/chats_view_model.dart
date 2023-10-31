@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print, unused_local_variable
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,6 +37,11 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
 
   setChatUserForSingleChatViewModel(UserData user) =>
       state = state.copyWith(selectedChatUser: user);
+
+  refreshChatView() {
+    _fetchAllUsers();
+    _fetchRecentChatsData();
+  }
 
   _fetchAllUsers() async {
     state = state.copyWith(status: ChatsViewStatus.loading);
@@ -115,6 +118,7 @@ class ChatsViewState with _$ChatsViewState {
     @Default(ChatsViewStatus.initial) ChatsViewStatus status,
     @Default([]) List<UserData> userDataList,
     @Default([]) List<ChatData> recentChats,
+    // @Default(0) int refreshCounter,
     UserData? selectedChatUser,
     String? errorMessage,
   }) = _ChatsViewState;
