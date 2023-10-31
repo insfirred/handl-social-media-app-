@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:social_media/scr/models/chat_data.dart';
+import 'package:social_media/scr/models/message.dart';
 import 'package:social_media/scr/models/user_data.dart';
 import 'package:social_media/scr/repositories/app_repository.dart';
 import 'package:social_media/scr/services/cloud_firestore.dart';
@@ -32,6 +34,7 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
     required this.ref,
   }) : super(const ChatsViewState()) {
     _fetchAllUsers();
+    _fetchRecentChatsData();
   }
 
   setChatUserForSingleChatViewModel(UserData user) =>
@@ -62,30 +65,43 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
     }
   }
 
-  // _fetchRecentChatUsers() async {
-  //   state = state.copyWith(status: ChatsViewStatus.loading);
-  //   try {
-  //     final usersCollection = firestore.collection('chats');
-  //     await usersCollection.get().then(
-  //       (data) {
-  //         List<UserData> recentChatUuserDataList = data.docs
-  //             .map((snapshot) => UserData.fromJson(snapshot.data()))
-  //             .toList();
+  _fetchRecentChatsData() async {
+    state = state.copyWith(status: ChatsViewStatus.loading);
+    try {
+      final usersCollection = firestore.collection('chats');
+      await usersCollection.get().then(
+        (data) {
+          List<ChatData> recentChatsData = data.docs.map(
+            (snapshot) {
+              Map<String, dynamic> data = snapshot.data();
+              List allMessagesListJson = data['all_messages_list'];
+              List<Message> allMessagesList =
+                  allMessagesListJson.map((i) => Message.fromJson(i)).toList();
+              Map<String, dynamic> lastMessageJson = data['last_message'];
+              Message lastMessage = Message.fromJson(lastMessageJson);
+              String user1 = data['user1'];
+              String user2 = data['user2'];
 
-  //         // removing the self from the list
-  //         userDataList.removeWhere((element) =>
-  //             element.id == ref.read(appRepositoryProvider).authUser!.uid);
+              return ChatData(
+                lastMessage: lastMessage,
+                allMessagesList: allMessagesList,
+                user1: user1,
+                user2: user2,
+              );
+            },
+          ).toList();
 
-  //         state = state.copyWith(
-  //           userDataList: userDataList,
-  //           status: ChatsViewStatus.loaded,
-  //         );
-  //       },
-  //     );
-  //   } catch (e) {
-  //     _setError(e.toString());
-  //   }
-  // }
+          state = state.copyWith(
+            recentChats: recentChatsData,
+            status: ChatsViewStatus.loaded,
+          );
+        },
+      );
+    } catch (e) {
+      _setError(e.toString());
+      print(e.toString());
+    }
+  }
 
   _setError(String? error) => state = state.copyWith(
         errorMessage: error,
@@ -98,7 +114,7 @@ class ChatsViewState with _$ChatsViewState {
   const factory ChatsViewState({
     @Default(ChatsViewStatus.initial) ChatsViewStatus status,
     @Default([]) List<UserData> userDataList,
-    @Default([]) List<UserData> recentChatUsers,
+    @Default([]) List<ChatData> recentChats,
     UserData? selectedChatUser,
     String? errorMessage,
   }) = _ChatsViewState;

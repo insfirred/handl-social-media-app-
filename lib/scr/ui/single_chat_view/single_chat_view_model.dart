@@ -37,37 +37,6 @@ class SingleChatViewModel extends StateNotifier<SingleChatViewState> {
     setChatUser(ref.read(chatsViewModelProvider).selectedChatUser!);
     state = state.copyWith(status: SingleChatViewStatus.loading);
     try {
-      // _subscription = fireStore
-      //     .collection('chats')
-      //     .orderBy('created_at')
-      //     .where('from',
-      //         isEqualTo: ref.read(appRepositoryProvider).authUser!.uid)
-      //     .where('to', isEqualTo: state.chatUser!.id)
-      //     .snapshots()
-      //     .listen(
-      //   (snapshot) {
-      //     if (snapshot.size == 0) {
-      //       state = state.copyWith(
-      //         status: SingleChatViewStatus.loaded,
-      //       );
-      //     } else {
-      //       final messagesList = snapshot.docs
-      //           .map(
-      //             (message) => Message.fromJson(
-      //               message.data(),
-      //             ),
-      //           )
-      //           .toList();
-
-      //       messagesList.reversed.toSet();
-      //       state = state.copyWith(
-      //         messagesList: messagesList,
-      //         status: SingleChatViewStatus.loaded,
-      //       );
-      //     }
-      //   },
-      // );
-
       _subscription = fireStore
           .collection('chats')
           .doc(
@@ -80,7 +49,7 @@ class SingleChatViewModel extends StateNotifier<SingleChatViewState> {
           .listen(
         (snapshot) {
           if (snapshot.exists) {
-            List messagesListJson = snapshot.data()!['list'];
+            List messagesListJson = snapshot.data()!['all_messages_list'];
             List<Message> messagesList =
                 messagesListJson.map((json) => Message.fromJson(json)).toList();
 
@@ -120,24 +89,6 @@ class SingleChatViewModel extends StateNotifier<SingleChatViewState> {
       return;
     }
     try {
-      // await fireStore
-      //     .collection('chats')
-      //     .add(
-      //       Message(
-      //         createdAt: DateTime.now(),
-      //         from: ref.read(appRepositoryProvider).authUser!.uid,
-      //         to: state.chatUser!.id,
-      //         messageText: state.textFieldValue?.trim() ?? '',
-      //       ).toJson(),
-      //     )
-      //     .then(
-      //   (value) async {
-      //     await fireStore.collection('chats').doc(value.id).update(
-      //       {'id': value.id},
-      //     );
-      //   },
-      // );
-
       final List<Message> updatedMessageList = [];
 
       for (var element in state.messagesList) {
@@ -165,10 +116,15 @@ class SingleChatViewModel extends StateNotifier<SingleChatViewState> {
             ),
           )
           .set(
-        {"list": updatedMessagesListJson},
+        {
+          "all_messages_list": updatedMessagesListJson,
+          "last_message":
+              updatedMessageList[updatedMessageList.length - 1].toJson(),
+          "user1": ref.read(appRepositoryProvider).userData!.username,
+          "user2": state.chatUser!.username,
+        },
         SetOptions(merge: true),
       );
-      print(state.textFieldValue);
     } catch (e) {
       _setError(e.toString());
       print(e);

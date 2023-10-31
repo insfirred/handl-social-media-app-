@@ -2,10 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:social_media/scr/models/chat_data.dart';
 import 'package:social_media/scr/models/user_data.dart';
-import 'package:social_media/scr/routing/app_router.dart';
+import 'package:social_media/scr/repositories/app_repository.dart';
 import 'package:social_media/scr/ui/chats/chats_view_model.dart';
+import 'package:intl/intl.dart';
 
+import '../../routing/app_router.dart';
 import '../../utils/bottom_sheet_utils.dart';
 
 @RoutePage()
@@ -17,14 +20,19 @@ class ChatsView extends ConsumerWidget {
     final userDataList = ref.watch(
       chatsViewModelProvider.select((_) => _.userDataList),
     );
+    final recentChats = ref.watch(
+      chatsViewModelProvider.select((_) => _.recentChats),
+    );
     return Scaffold(
-      body: const SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Recent Chatties'),
-            ],
+      body: SafeArea(
+        child: ListView.builder(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 30,
+          ),
+          itemCount: recentChats.length,
+          itemBuilder: (context, index) => RecentChatCard(
+            chatData: recentChats[index],
           ),
         ),
       ),
@@ -37,6 +45,24 @@ class ChatsView extends ConsumerWidget {
           Icons.add,
           color: Colors.white,
         ),
+      ),
+    );
+  }
+}
+
+class NoRecentChatsWidget extends StatelessWidget {
+  const NoRecentChatsWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('No Recent Chatties'),
+        ],
       ),
     );
   }
@@ -129,6 +155,77 @@ class UserChatCard extends ConsumerWidget {
             Text(
               userData.email,
               style: GoogleFonts.dosis(color: Colors.grey[700]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RecentChatCard extends ConsumerWidget {
+  const RecentChatCard({
+    super.key,
+    required this.chatData,
+  });
+
+  final ChatData chatData;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selfName = ref.read(appRepositoryProvider).userData!.username;
+    String chatUserName = chatData.user1;
+
+    if (chatUserName == selfName) {
+      chatUserName = chatData.user2;
+    }
+
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.only(bottom: 15),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFDFDF),
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 2,
+              spreadRadius: 2,
+              color: Color.fromARGB(25, 0, 0, 0),
+              offset: Offset(2, 2),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  chatUserName,
+                  style: GoogleFonts.dosis(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  chatData.lastMessage.messageText,
+                  style: GoogleFonts.dosis(color: Colors.grey[700]),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  DateFormat.jm().format(chatData.lastMessage.createdAt),
+                  style: GoogleFonts.dosis(color: Colors.grey[700]),
+                ),
+                Text(
+                  DateFormat('MMMM d y').format(chatData.lastMessage.createdAt),
+                  style: GoogleFonts.dosis(color: Colors.grey[700]),
+                ),
+              ],
             ),
           ],
         ),
