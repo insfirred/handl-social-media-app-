@@ -10,6 +10,7 @@ import '../ui/main/main_view.dart';
 import '../ui/profile/profile_view.dart';
 import '../ui/single_chat_view/single_chat_view.dart';
 import '../ui/splash/splash_view.dart';
+import '../ui/upload_post/upload_post_view.dart';
 
 part 'app_router.gr.dart';
 
@@ -51,6 +52,10 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           path: '/single-chat',
           page: SingleChatRoute.page,
+        ),
+        AutoRoute(
+          path: '/upload-post',
+          page: UploadPostRoute.page,
         ),
       ];
 }

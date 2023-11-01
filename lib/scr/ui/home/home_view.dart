@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:social_media/scr/models/tweet.dart';
+import 'package:social_media/scr/routing/app_router.dart';
 
 import 'widgets/tweet_card.dart';
 
@@ -48,7 +49,9 @@ class HomeView extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          context.router.push(const UploadPostRoute());
+        },
         child: const Icon(
           Icons.add,
           color: Colors.white,

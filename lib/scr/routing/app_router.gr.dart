@@ -67,6 +67,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const SplashView(),
       );
     },
+    UploadPostRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const UploadPostView(),
+      );
+    },
   };
 }
 
@@ -202,6 +208,20 @@ class SplashRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'SplashRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UploadPostView]
+class UploadPostRoute extends PageRouteInfo<void> {
+  const UploadPostRoute({List<PageRouteInfo>? children})
+      : super(
+          UploadPostRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UploadPostRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
