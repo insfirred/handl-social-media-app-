@@ -74,7 +74,10 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
       final usersCollection = firestore.collection('chats');
       await usersCollection.get().then(
         (data) {
-          List<ChatData> recentChatsData = data.docs.map(
+          data.docs.forEach((element) {
+            print(element.data());
+          });
+          List<ChatData> allChatsData = data.docs.map(
             (snapshot) {
               Map<String, dynamic> data = snapshot.data();
               List allMessagesListJson = data['all_messages_list'];
@@ -93,6 +96,15 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
               );
             },
           ).toList();
+
+          String selfUid = ref.read(appRepositoryProvider).authUser!.uid;
+          List<ChatData> recentChatsData = [];
+          for (int i = 0; i < allChatsData.length; i++) {
+            if (allChatsData[i].lastMessage.from == selfUid ||
+                allChatsData[i].lastMessage.to == selfUid) {
+              recentChatsData.add(allChatsData[i]);
+            }
+          }
 
           state = state.copyWith(
             recentChats: recentChatsData,
@@ -118,7 +130,6 @@ class ChatsViewState with _$ChatsViewState {
     @Default(ChatsViewStatus.initial) ChatsViewStatus status,
     @Default([]) List<UserData> userDataList,
     @Default([]) List<ChatData> recentChats,
-    // @Default(0) int refreshCounter,
     UserData? selectedChatUser,
     String? errorMessage,
   }) = _ChatsViewState;
