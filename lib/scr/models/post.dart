@@ -1,9 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:social_media/scr/constants/enums_handl.dart';
 
-part 'tweet.g.dart';
+part 'post.g.dart';
 
 @JsonSerializable()
-class Tweet {
+class Post {
+  final String id;
+  final PostType type;
   final String text;
   @JsonKey(name: 'created_at')
   final DateTime createdAt;
@@ -12,21 +15,23 @@ class Tweet {
   @JsonKey(name: 'created_by_name')
   final String createdByName;
   final int likes;
-  @JsonKey(name: 'self_liked')
-  final bool selfLiked;
+  @JsonKey(name: 'liked_by')
+  final List<String> likedBy;
   @JsonKey(name: 'is_boormarked')
   final bool isBookmarked;
 
-  const Tweet({
+  const Post({
+    this.id = "",
+    required this.type,
     required this.text,
     required this.createdAt,
     required this.createdById,
     required this.createdByName,
     required this.likes,
-    required this.selfLiked,
+    required this.likedBy,
     required this.isBookmarked,
   });
 
-  factory Tweet.fromJson(Map<String, dynamic> json) => _$TweetFromJson(json);
-  Map<String, dynamic> toJson() => _$TweetToJson(this);
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
+  Map<String, dynamic> toJson() => _$PostToJson(this);
 }

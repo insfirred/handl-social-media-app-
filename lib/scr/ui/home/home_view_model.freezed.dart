@@ -16,7 +16,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$HomeViewState {
-  List<Tweet> get tweetsList => throw _privateConstructorUsedError;
+  List<Post> get posts => throw _privateConstructorUsedError;
+  String? get likedPostId => throw _privateConstructorUsedError;
   HomeViewStatus get status => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
@@ -32,7 +33,10 @@ abstract class $HomeViewStateCopyWith<$Res> {
       _$HomeViewStateCopyWithImpl<$Res, HomeViewState>;
   @useResult
   $Res call(
-      {List<Tweet> tweetsList, HomeViewStatus status, String? errorMessage});
+      {List<Post> posts,
+      String? likedPostId,
+      HomeViewStatus status,
+      String? errorMessage});
 }
 
 /// @nodoc
@@ -48,15 +52,20 @@ class _$HomeViewStateCopyWithImpl<$Res, $Val extends HomeViewState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? tweetsList = null,
+    Object? posts = null,
+    Object? likedPostId = freezed,
     Object? status = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
-      tweetsList: null == tweetsList
-          ? _value.tweetsList
-          : tweetsList // ignore: cast_nullable_to_non_nullable
-              as List<Tweet>,
+      posts: null == posts
+          ? _value.posts
+          : posts // ignore: cast_nullable_to_non_nullable
+              as List<Post>,
+      likedPostId: freezed == likedPostId
+          ? _value.likedPostId
+          : likedPostId // ignore: cast_nullable_to_non_nullable
+              as String?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -78,7 +87,10 @@ abstract class _$$HomeViewStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {List<Tweet> tweetsList, HomeViewStatus status, String? errorMessage});
+      {List<Post> posts,
+      String? likedPostId,
+      HomeViewStatus status,
+      String? errorMessage});
 }
 
 /// @nodoc
@@ -92,15 +104,20 @@ class __$$HomeViewStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? tweetsList = null,
+    Object? posts = null,
+    Object? likedPostId = freezed,
     Object? status = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_$HomeViewStateImpl(
-      tweetsList: null == tweetsList
-          ? _value._tweetsList
-          : tweetsList // ignore: cast_nullable_to_non_nullable
-              as List<Tweet>,
+      posts: null == posts
+          ? _value._posts
+          : posts // ignore: cast_nullable_to_non_nullable
+              as List<Post>,
+      likedPostId: freezed == likedPostId
+          ? _value.likedPostId
+          : likedPostId // ignore: cast_nullable_to_non_nullable
+              as String?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -117,20 +134,23 @@ class __$$HomeViewStateImplCopyWithImpl<$Res>
 
 class _$HomeViewStateImpl implements _HomeViewState {
   const _$HomeViewStateImpl(
-      {final List<Tweet> tweetsList = const [],
+      {final List<Post> posts = const [],
+      this.likedPostId,
       this.status = HomeViewStatus.initial,
       this.errorMessage})
-      : _tweetsList = tweetsList;
+      : _posts = posts;
 
-  final List<Tweet> _tweetsList;
+  final List<Post> _posts;
   @override
   @JsonKey()
-  List<Tweet> get tweetsList {
-    if (_tweetsList is EqualUnmodifiableListView) return _tweetsList;
+  List<Post> get posts {
+    if (_posts is EqualUnmodifiableListView) return _posts;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_tweetsList);
+    return EqualUnmodifiableListView(_posts);
   }
 
+  @override
+  final String? likedPostId;
   @override
   @JsonKey()
   final HomeViewStatus status;
@@ -139,7 +159,7 @@ class _$HomeViewStateImpl implements _HomeViewState {
 
   @override
   String toString() {
-    return 'HomeViewState(tweetsList: $tweetsList, status: $status, errorMessage: $errorMessage)';
+    return 'HomeViewState(posts: $posts, likedPostId: $likedPostId, status: $status, errorMessage: $errorMessage)';
   }
 
   @override
@@ -147,16 +167,21 @@ class _$HomeViewStateImpl implements _HomeViewState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$HomeViewStateImpl &&
-            const DeepCollectionEquality()
-                .equals(other._tweetsList, _tweetsList) &&
+            const DeepCollectionEquality().equals(other._posts, _posts) &&
+            (identical(other.likedPostId, likedPostId) ||
+                other.likedPostId == likedPostId) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_tweetsList), status, errorMessage);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_posts),
+      likedPostId,
+      status,
+      errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -167,12 +192,15 @@ class _$HomeViewStateImpl implements _HomeViewState {
 
 abstract class _HomeViewState implements HomeViewState {
   const factory _HomeViewState(
-      {final List<Tweet> tweetsList,
+      {final List<Post> posts,
+      final String? likedPostId,
       final HomeViewStatus status,
       final String? errorMessage}) = _$HomeViewStateImpl;
 
   @override
-  List<Tweet> get tweetsList;
+  List<Post> get posts;
+  @override
+  String? get likedPostId;
   @override
   HomeViewStatus get status;
   @override

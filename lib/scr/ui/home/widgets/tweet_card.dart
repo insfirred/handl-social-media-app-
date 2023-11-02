@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../../../constants/colors.dart';
-import '../../../models/tweet.dart';
+import 'package:social_media/scr/ui/home/home_view_model.dart';
 
-class TweetCard extends StatelessWidget {
+import '../../../constants/colors.dart';
+import '../../../models/post.dart';
+
+class TweetCard extends ConsumerWidget {
   const TweetCard({
     super.key,
     required this.tweet,
+    required this.selfLiked,
   });
 
-  final Tweet tweet;
+  final Post tweet;
+  final bool selfLiked;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(18),
@@ -65,10 +70,20 @@ class TweetCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  FaIcon(
-                    tweet.selfLiked
-                        ? FontAwesomeIcons.solidHeart
-                        : FontAwesomeIcons.heart,
+                  GestureDetector(
+                    onTap: () {
+                      ref
+                          .read(homeViewModelProvider.notifier)
+                          .setLikedPostId(tweet.id);
+                      ref.read(homeViewModelProvider.notifier).likeBtnTapped();
+                    },
+                    child: selfLiked
+                        ? const FaIcon(
+                            FontAwesomeIcons.solidHeart,
+                          )
+                        : const FaIcon(
+                            FontAwesomeIcons.heart,
+                          ),
                   ),
                   const SizedBox(width: 10),
                   Text(

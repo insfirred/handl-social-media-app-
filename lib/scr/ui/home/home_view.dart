@@ -1,52 +1,50 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:social_media/scr/models/tweet.dart';
-import 'package:social_media/scr/routing/app_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:social_media/scr/repositories/app_repository.dart';
 
+import '../../routing/app_router.dart';
+import 'home_view_model.dart';
 import 'widgets/tweet_card.dart';
 
 @RoutePage()
-class HomeView extends StatelessWidget {
+class HomeView extends ConsumerWidget {
   const HomeView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    List<Tweet> tweetsList = [
-      Tweet(
-        text: "First Tweet",
-        createdAt: DateTime.now(),
-        createdById: "ebcbvabkuvbkrevbaekav",
-        createdByName: "Kalash",
-        likes: 9,
-        selfLiked: true,
-        isBookmarked: false,
-      ),
-      Tweet(
-        text: "Asla hum bhi rakhte hai pehalwaan, jab marji phet liye",
-        createdAt: DateTime.now(),
-        createdById: "ebcbvabkuvbkrevbaekav",
-        createdByName: "Apple",
-        likes: 7,
-        selfLiked: true,
-        isBookmarked: true,
-      ),
-      Tweet(
-        text: "Bhupendra Jogi",
-        createdAt: DateTime.now(),
-        createdById: "ebcbvabkuvbkrevbaekav",
-        createdByName: "Kalash",
-        likes: 2,
-        selfLiked: false,
-        isBookmarked: false,
-      ),
-    ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final error = ref.watch(
+          homeViewModelProvider.select((_) => _.errorMessage),
+        ) ??
+        "Something went wrong";
+    final status = ref.watch(
+      homeViewModelProvider.select((_) => _.status),
+    );
+    final posts = ref.watch(
+      homeViewModelProvider.select((_) => _.posts),
+    );
+
     return Scaffold(
       body: SafeArea(
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-          itemCount: tweetsList.length,
-          itemBuilder: (context, index) => TweetCard(tweet: tweetsList[index]),
-        ),
+        child: status == HomeViewStatus.loading
+            ? const Center(child: CircularProgressIndicator())
+            : status == HomeViewStatus.error
+                ? Center(
+                    child: Text(error),
+                  )
+                : posts.isEmpty
+                    ? const Center(child: Text("No Posts"))
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 25),
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) => TweetCard(
+                          tweet: posts[index],
+                          selfLiked: posts[index].likedBy.contains(
+                                ref.read(appRepositoryProvider).authUser!.uid,
+                              ),
+                        ),
+                      ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

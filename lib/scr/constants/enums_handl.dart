@@ -1,3 +1,4 @@
 enum PostType {
   tweet,
+  images,
 }

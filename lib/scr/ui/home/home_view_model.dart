@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:social_media/scr/models/tweet.dart';
+import 'package:social_media/scr/models/post.dart';
+import 'package:social_media/scr/repositories/app_repository.dart';
 
 import '../../services/cloud_firestore.dart';
 import '../../services/firebase_auth.dart';
@@ -22,62 +25,104 @@ class HomeViewModel extends StateNotifier<HomeViewState> {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore fireStore;
   final StateNotifierProviderRef ref;
-  // late StreamSubscription<DocumentSnapshot<Map<String, dynamic>>> _subscription;
+  late StreamSubscription<QuerySnapshot<Map<String, dynamic>>> _subscription;
 
   HomeViewModel({
     required this.firebaseAuth,
     required this.fireStore,
     required this.ref,
   }) : super(const HomeViewState()) {
-    // setChatUser(ref.read(chatsViewModelProvider).selectedChatUser!);
-    // state = state.copyWith(status: HomeViewStatus.loading);
-    // try {
-    //   _subscription = fireStore
-    //       .collection('chats')
-    //       .doc(
-    //         _getChatDocId(
-    //           ref.read(appRepositoryProvider).authUser!.uid,
-    //           state.chatUser!.id,
-    //         ),
-    //       )
-    //       .snapshots()
-    //       .listen(
-    //     (snapshot) {
-    //       if (snapshot.exists) {
-    //         List messagesListJson = snapshot.data()!['all_messages_list'];
-    //         List<Message> messagesList =
-    //             messagesListJson.map((json) => Message.fromJson(json)).toList();
+    _fetchingPosts();
+  }
 
-    //         // sorting the list according to time
-    //         messagesList.sort(
-    //           (a, b) => a.createdAt.compareTo(b.createdAt),
-    //         );
+  /// when user tapped the like button (heart button)
+  likeBtnTapped() async {
+    state = state.copyWith(status: HomeViewStatus.initial);
+    try {
+      await fireStore.collection('posts').doc(state.likedPostId).get().then(
+        (value) {
+          List likedBy = value.data()?['liked_by'];
+          if (likedBy.contains(ref.read(appRepositoryProvider).authUser!.uid)) {
+            // UNLIKE
+            likedBy.remove(ref.read(appRepositoryProvider).authUser!.uid);
+          } else {
+            // LIKE
+            likedBy.add(ref.read(appRepositoryProvider).authUser!.uid);
+          }
 
-    //         // reversing the list
-    //         messagesList = List.from(messagesList.reversed);
+          value.reference.set(
+            {
+              'liked_by': likedBy,
+              'likes': likedBy.length,
+            },
+            SetOptions(merge: true),
+          );
+        },
+      );
+    } catch (e) {
+      print(e);
+      _setError(e.toString());
+    }
+  }
 
-    //         state = state.copyWith(
-    //           messagesList: messagesList,
-    //           status: SingleChatViewStatus.loaded,
-    //         );
-    //         ref.read(chatsViewModelProvider.notifier).refreshChatView();
-    //       } else {
-    //         state = state.copyWith(status: SingleChatViewStatus.loaded);
-    //       }
-    //     },
-    //   );
-    // } catch (e) {
-    //   _setError(e.toString());
-    //   state = state.copyWith(status: SingleChatViewStatus.error);
-    //   print(e);
-    // }
+  setLikedPostId(String id) => state = state.copyWith(
+        likedPostId: id,
+      );
+
+  _fetchingPosts() async {
+    state = state.copyWith(status: HomeViewStatus.loading);
+
+    try {
+      print('Listening Snapshots');
+
+      _subscription = fireStore.collection('posts').snapshots().listen(
+        (snapshot) {
+          print('Home View Loading');
+          print(snapshot.size);
+          if (snapshot.size == 0) {
+            print('No posts here!!!!!!!!!!!!');
+            state = state.copyWith(status: HomeViewStatus.loaded);
+          } else {
+            print('Fetching!!!!!!!!');
+            List<Post> posts = [];
+            print(snapshot.docs.length);
+            for (var doc in snapshot.docs) {
+              posts.add(Post.fromJson(doc.data()));
+              print('yes');
+            }
+
+            state = state.copyWith(
+              posts: posts,
+              status: HomeViewStatus.loaded,
+            );
+            print('Posts fetched!!!!!!!!!!');
+          }
+        },
+      );
+    } catch (e) {
+      _setError(e.toString());
+      state = state.copyWith(status: HomeViewStatus.error);
+      print(e);
+    }
+  }
+
+  _setError(String? error) => state = state.copyWith(
+        status: HomeViewStatus.error,
+        errorMessage: error,
+      );
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 }
 
 @freezed
 class HomeViewState with _$HomeViewState {
   const factory HomeViewState({
-    @Default([]) List<Tweet> tweetsList,
+    @Default([]) List<Post> posts,
+    String? likedPostId,
     @Default(HomeViewStatus.initial) HomeViewStatus status,
     String? errorMessage,
   }) = _HomeViewState;

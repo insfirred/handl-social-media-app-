@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:social_media/scr/constants/enums_handl.dart';
 
-import '../../models/tweet.dart';
+import '../../models/post.dart';
 import '../../repositories/app_repository.dart';
 import '../../services/cloud_firestore.dart';
 
@@ -35,22 +36,24 @@ class UploadPostViewModel extends StateNotifier<UploadPostViewState> {
       }
       print('validation successfull');
       state = state.copyWith(status: UploadPostViewStatus.loading);
-      Tweet tweet = Tweet(
+      Post tweet = Post(
+        type: PostType.tweet,
         text: state.tweetText!,
         createdAt: DateTime.now(),
         createdById: ref.read(appRepositoryProvider).authUser!.uid,
         createdByName: ref.read(appRepositoryProvider).userData!.username,
         likes: 0,
-        selfLiked: false,
+        likedBy: [],
         isBookmarked: false,
       );
 
       print('tweet created');
-      await fireStore
-          .collection('posts')
-          .doc(ref.read(appRepositoryProvider).authUser!.uid)
-          .collection('tweets')
-          .add(tweet.toJson());
+      await fireStore.collection('posts').add(tweet.toJson()).then(
+            (post) => post.set(
+              {"id": post.id},
+              SetOptions(merge: true),
+            ),
+          );
 
       print('tweet uploaded');
       state = state.copyWith(status: UploadPostViewStatus.uploaded);
