@@ -14,6 +14,8 @@ class Post {
   final String createdById;
   @JsonKey(name: 'created_by_name')
   final String createdByName;
+  @JsonKey(name: 'created_by_pic')
+  final String? createdByPic;
   final int likes;
   @JsonKey(name: 'liked_by')
   final List<String> likedBy;
@@ -27,6 +29,7 @@ class Post {
     required this.createdAt,
     required this.createdById,
     required this.createdByName,
+    this.createdByPic,
     required this.likes,
     required this.likedBy,
     required this.isBookmarked,

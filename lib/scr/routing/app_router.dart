@@ -8,7 +8,7 @@ import '../ui/create_username/create_username_view.dart';
 import '../ui/home/home_view.dart';
 import '../ui/main/main_view.dart';
 import '../ui/profile/profile_view.dart';
-import '../ui/single_chat_view/single_chat_view.dart';
+import '../ui/single_chat/single_chat_view.dart';
 import '../ui/splash/splash_view.dart';
 import '../ui/upload_post/upload_post_view.dart';
 

@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:social_media/scr/models/user_data.dart';
+import 'package:social_media/scr/services/firebase_storage.dart';
 
 import '../services/cloud_firestore.dart';
 import '../services/firebase_auth.dart';
@@ -13,18 +15,22 @@ part 'app_repository.freezed.dart';
 
 final appRepositoryProvider = StateNotifierProvider<AppRepository, AppState>(
   (ref) => AppRepository(
-      firebaseAuth: ref.watch(firebaseAuthProvider),
-      firestore: ref.watch(firestoreProvider)),
+    firebaseAuth: ref.watch(firebaseAuthProvider),
+    firestore: ref.watch(firestoreProvider),
+    storage: ref.watch(firebaseStorageProvider),
+  ),
 );
 
 class AppRepository extends StateNotifier<AppState> {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
+  final FirebaseStorage storage;
   late final StreamSubscription _subscription;
 
   AppRepository({
     required this.firebaseAuth,
     required this.firestore,
+    required this.storage,
   }) : super(const AppState()) {
     () async {
       await Future.delayed(const Duration(milliseconds: 2000));
@@ -77,6 +83,11 @@ class AppRepository extends StateNotifier<AppState> {
   setAppStatus(AppStatus status) => state = state.copyWith(status: status);
 
   setUserData(UserData data) => state = state.copyWith(userData: data);
+
+  Future<String> fetchImageUrlFromUid(String uid) async {
+    Reference storageReference = storage.ref().child("images/$uid/pp");
+    return storageReference.getDownloadURL();
+  }
 
   Future<AppStatus> _fetchUserDataAndNavigate() async {
     AppStatus currentStatus = AppStatus.initial;

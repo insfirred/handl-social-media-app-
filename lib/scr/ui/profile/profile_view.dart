@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/scr/repositories/app_repository.dart';
 import 'package:social_media/scr/ui/profile/profile_view_model.dart';
 
-import 'widgets/error_builder.dart';
-import 'widgets/loading_builder.dart';
+import '../common_components/error_builder.dart';
+import '../common_components/loading_builder.dart';
 
 @RoutePage()
 class ProfileView extends ConsumerWidget {

@@ -8,6 +8,8 @@ import 'package:social_media/scr/ui/home/home_view_model.dart';
 
 import '../../../constants/colors.dart';
 import '../../../models/post.dart';
+import '../../common_components/error_builder.dart';
+import '../../common_components/loading_builder.dart';
 
 class TweetCard extends ConsumerWidget {
   const TweetCard({
@@ -39,8 +41,37 @@ class TweetCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              tweet.createdByPic != null
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(25),
+                      child: SizedBox(
+                        width: 28,
+                        height: 28,
+                        child: Image.network(
+                          tweet.createdByPic ?? "",
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) =>
+                              loadingBuilder(context, child, loadingProgress),
+                          errorBuilder: (context, error, stackTrace) => Center(
+                            child: errorBuilder(),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: const FaIcon(
+                        FontAwesomeIcons.user,
+                        size: 15,
+                      ),
+                    ),
+              const SizedBox(width: 10),
               Text(
                 tweet.createdByName,
                 style: GoogleFonts.dosis(
@@ -48,8 +79,10 @@ class TweetCard extends ConsumerWidget {
                   fontSize: 18,
                 ),
               ),
+              const Spacer(),
               Text(
-                "${DateFormat.jm().format(tweet.createdAt)}  ${DateFormat('d MMMM yy').format(tweet.createdAt)}",
+                // "${DateFormat.jm().format(tweet.createdAt)}  ${DateFormat('d MMMM yy').format(tweet.createdAt)}",
+                DateFormat('d MMMM yy').format(tweet.createdAt),
                 style: GoogleFonts.dosis(
                   color: Colors.grey[700],
                   fontSize: 15,

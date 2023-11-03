@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/scr/models/chat_data.dart';
 import 'package:social_media/scr/models/user_data.dart';
@@ -10,6 +11,8 @@ import 'package:intl/intl.dart';
 
 import '../../routing/app_router.dart';
 import '../../utils/bottom_sheet_utils.dart';
+import '../common_components/error_builder.dart';
+import '../common_components/loading_builder.dart';
 
 @RoutePage()
 class ChatsView extends ConsumerWidget {
@@ -153,16 +156,49 @@ class UserChatCard extends ConsumerWidget {
           ],
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              userData.username,
-              style: GoogleFonts.dosis(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              userData.email,
-              style: GoogleFonts.dosis(color: Colors.grey[700]),
+            userData.imageUrl != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: SizedBox(
+                      width: 28,
+                      height: 28,
+                      child: Image.network(
+                        userData.imageUrl ?? "",
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) =>
+                            loadingBuilder(context, child, loadingProgress),
+                        errorBuilder: (context, error, stackTrace) => Center(
+                          child: errorBuilder(),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: const FaIcon(
+                      FontAwesomeIcons.user,
+                      size: 15,
+                    ),
+                  ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userData.username,
+                  style: GoogleFonts.dosis(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  userData.email,
+                  style: GoogleFonts.dosis(color: Colors.grey[700]),
+                ),
+              ],
             ),
           ],
         ),
@@ -171,7 +207,7 @@ class UserChatCard extends ConsumerWidget {
   }
 }
 
-class RecentChatCard extends ConsumerWidget {
+class RecentChatCard extends ConsumerStatefulWidget {
   const RecentChatCard({
     super.key,
     required this.chatData,
@@ -180,7 +216,31 @@ class RecentChatCard extends ConsumerWidget {
   final ChatData chatData;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<RecentChatCard> createState() => _RecentChatCardState();
+}
+
+class _RecentChatCardState extends ConsumerState<RecentChatCard> {
+  String? imageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    () async {
+      final selfUid = ref.read(appRepositoryProvider).userData!.id;
+      String chatUserUid = widget.chatData.lastMessage.from;
+      if (chatUserUid == selfUid) {
+        chatUserUid = widget.chatData.lastMessage.to;
+      }
+      imageUrl = await ref
+          .read(appRepositoryProvider.notifier)
+          .fetchImageUrlFromUid(chatUserUid);
+      setState(() {});
+    }();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ChatData chatData = widget.chatData;
     final selfName = ref.read(appRepositoryProvider).userData!.username;
     String chatUserName = chatData.user1;
 
@@ -203,7 +263,6 @@ class RecentChatCard extends ConsumerWidget {
         .where((userData) => userData.id == chatUserUid)
         .toList()
         .first;
-
     return GestureDetector(
       onTap: () {
         ref
@@ -228,8 +287,32 @@ class RecentChatCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            imageUrl != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(25),
+                    child: SizedBox(
+                      width: 35,
+                      height: 35,
+                      child: Image.network(
+                        imageUrl ?? "",
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) =>
+                            loadingBuilder(context, child, loadingProgress),
+                        errorBuilder: (context, error, stackTrace) => Center(
+                          child: errorBuilder(),
+                        ),
+                      ),
+                    ),
+                  )
+                : const CircleAvatar(
+                    child: FaIcon(
+                      FontAwesomeIcons.user,
+                      size: 20,
+                    ),
+                  ),
+            const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -238,20 +321,22 @@ class RecentChatCard extends ConsumerWidget {
                   style: GoogleFonts.dosis(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  chatData.lastMessage.messageText,
+                  widget.chatData.lastMessage.messageText,
                   style: GoogleFonts.dosis(color: Colors.grey[700]),
                 ),
               ],
             ),
+            const Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  DateFormat.jm().format(chatData.lastMessage.createdAt),
+                  DateFormat.jm().format(widget.chatData.lastMessage.createdAt),
                   style: GoogleFonts.dosis(color: Colors.grey[700]),
                 ),
                 Text(
-                  DateFormat('MMMM d y').format(chatData.lastMessage.createdAt),
+                  DateFormat('MMMM d y')
+                      .format(widget.chatData.lastMessage.createdAt),
                   style: GoogleFonts.dosis(color: Colors.grey[700]),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/scr/constants/colors.dart';
 import 'package:social_media/scr/models/message.dart';
@@ -8,6 +9,8 @@ import 'package:social_media/scr/repositories/app_repository.dart';
 import 'package:social_media/scr/utils/snackbar_utils.dart';
 
 import '../../models/user_data.dart';
+import '../common_components/error_builder.dart';
+import '../common_components/loading_builder.dart';
 import 'single_chat_view_model.dart';
 
 @RoutePage()
@@ -60,10 +63,38 @@ class _SingleChatViewState extends ConsumerState<SingleChatView> {
             ),
           ],
         ),
+        leadingWidth: 50,
+        leading: chatUser.imageUrl != null
+            ? Padding(
+                padding: const EdgeInsets.only(top: 15, bottom: 15, left: 15),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: Image.network(
+                    chatUser.imageUrl ?? "",
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) =>
+                        loadingBuilder(context, child, loadingProgress),
+                    errorBuilder: (context, error, stackTrace) => Center(
+                      child: errorBuilder(),
+                    ),
+                  ),
+                ),
+              )
+            : Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: const FaIcon(
+                  FontAwesomeIcons.user,
+                  size: 15,
+                ),
+              ),
       ),
       body: Column(
         children: [
-          ChatsListWidget(),
+          const ChatsListWidget(),
           InputSection(
             chatUser: chatUser,
             // scrollController: scrollController,

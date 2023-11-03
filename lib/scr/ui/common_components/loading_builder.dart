@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/colors.dart';
+import '../../constants/colors.dart';
 
 Widget loadingBuilder(
         BuildContext context, Widget child, ImageChunkEvent? loadingProgress) =>

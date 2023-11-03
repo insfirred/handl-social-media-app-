@@ -42,6 +42,7 @@ class UploadPostViewModel extends StateNotifier<UploadPostViewState> {
         createdAt: DateTime.now(),
         createdById: ref.read(appRepositoryProvider).authUser!.uid,
         createdByName: ref.read(appRepositoryProvider).userData!.username,
+        createdByPic: ref.read(appRepositoryProvider).userData!.imageUrl,
         likes: 0,
         likedBy: [],
         isBookmarked: false,

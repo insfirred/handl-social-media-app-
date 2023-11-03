@@ -106,6 +106,9 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
             }
           }
 
+          recentChatsData.sort((a, b) =>
+              b.lastMessage.createdAt.compareTo(a.lastMessage.createdAt));
+
           state = state.copyWith(
             recentChats: recentChatsData,
             status: ChatsViewStatus.loaded,

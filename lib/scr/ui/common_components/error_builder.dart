@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../constants/colors.dart';
+import '../../constants/colors.dart';
 
 Widget errorBuilder() => Container(
       padding: const EdgeInsets.all(25),
