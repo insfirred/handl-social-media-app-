@@ -1,8 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:social_media/scr/repositories/app_repository.dart';
+import 'package:social_media/scr/ui/profile/profile_view_model.dart';
+
+import 'widgets/error_builder.dart';
+import 'widgets/loading_builder.dart';
 
 @RoutePage()
 class ProfileView extends ConsumerWidget {
@@ -13,11 +18,44 @@ class ProfileView extends ConsumerWidget {
     final userData = ref.watch(
       appRepositoryProvider.select((_) => _.userData),
     );
+    bool imageExists = userData?.imageUrl != null;
+
     return SafeArea(
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: GestureDetector(
+                onTap: () {
+                  ref
+                      .read(profileViewModelProvider.notifier)
+                      .pickImageAndUpload();
+                },
+                child: imageExists
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(25),
+                        child: Image.network(
+                          userData?.imageUrl ?? "",
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) =>
+                              loadingBuilder(context, child, loadingProgress),
+                          errorBuilder: (context, error, stackTrace) => Center(
+                            child: errorBuilder(),
+                          ),
+                        ),
+                      )
+                    : const CircleAvatar(
+                        child: FaIcon(
+                          FontAwesomeIcons.user,
+                          size: 35,
+                        ),
+                      ),
+              ),
+            ),
+            const SizedBox(height: 15),
             Text(
               userData!.username,
               style: GoogleFonts.dosis(

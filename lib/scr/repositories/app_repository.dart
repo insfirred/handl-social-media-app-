@@ -48,8 +48,30 @@ class AppRepository extends StateNotifier<AppState> {
     }();
   }
 
-  void logout() {
+  logout() {
     firebaseAuth.signOut();
+  }
+
+  setProfilePicUrlInFireStore(String url) async {
+    try {
+      final currentUserId = state.authUser!.uid;
+      final userCollection = firestore.collection('users');
+      await userCollection.doc(currentUserId).set(
+        {'image_url': url},
+        SetOptions(merge: true),
+      );
+      state = state.copyWith(
+        userData: UserData(
+          id: state.userData!.id,
+          username: state.userData!.username,
+          email: state.userData!.email,
+          dateCreated: state.userData!.dateCreated,
+          imageUrl: url,
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   setAppStatus(AppStatus status) => state = state.copyWith(status: status);
@@ -70,10 +92,7 @@ class AppRepository extends StateNotifier<AppState> {
           print("User data is not present");
           currentStatus = AppStatus.authenticatedWithNoUserData;
         } else {
-          state = state.copyWith(
-            userData: UserData.fromJson(json.data()!),
-          );
-          print('User data is present');
+          state = state.copyWith(userData: UserData.fromJson(json.data()!));
           currentStatus = AppStatus.authenticatedWithUserData;
         }
       },

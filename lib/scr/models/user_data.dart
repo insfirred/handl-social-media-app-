@@ -9,12 +9,15 @@ class UserData {
   final String email;
   @JsonKey(name: 'date_created')
   final DateTime dateCreated;
+  @JsonKey(name: 'image_url')
+  final String? imageUrl;
 
   const UserData({
     required this.id,
     required this.username,
     required this.email,
     required this.dateCreated,
+    this.imageUrl,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

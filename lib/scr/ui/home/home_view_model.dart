@@ -75,7 +75,11 @@ class HomeViewModel extends StateNotifier<HomeViewState> {
     try {
       print('Listening Snapshots');
 
-      _subscription = fireStore.collection('posts').snapshots().listen(
+      _subscription = fireStore
+          .collection('posts')
+          .orderBy('created_at', descending: true)
+          .snapshots()
+          .listen(
         (snapshot) {
           print('Home View Loading');
           print(snapshot.size);

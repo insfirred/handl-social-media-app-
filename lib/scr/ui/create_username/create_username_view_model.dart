@@ -37,9 +37,7 @@ class CreateUsernameViewModel extends StateNotifier<CreateUsernameViewState> {
         status: CreateUsernameViewStatus.initial,
       );
 
-  // setCreateUsernameViewStatus(CreateUsernameViewStatus status) =>
-  //     state = state.copyWith(status: status);
-
+  /// creates a user model in firestore users collection
   createUserName() async {
     if (!_validationOnUsername()) return;
     try {
