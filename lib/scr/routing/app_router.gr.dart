@@ -68,9 +68,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     UploadPostRoute.name: (routeData) {
+      final args = routeData.argsAs<UploadPostRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const UploadPostView(),
+        child: UploadPostView(
+          key: args.key,
+          activeScreen: args.activeScreen,
+        ),
       );
     },
   };
@@ -214,14 +218,38 @@ class SplashRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [UploadPostView]
-class UploadPostRoute extends PageRouteInfo<void> {
-  const UploadPostRoute({List<PageRouteInfo>? children})
-      : super(
+class UploadPostRoute extends PageRouteInfo<UploadPostRouteArgs> {
+  UploadPostRoute({
+    Key? key,
+    required UploadPostScreen activeScreen,
+    List<PageRouteInfo>? children,
+  }) : super(
           UploadPostRoute.name,
+          args: UploadPostRouteArgs(
+            key: key,
+            activeScreen: activeScreen,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'UploadPostRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<UploadPostRouteArgs> page =
+      PageInfo<UploadPostRouteArgs>(name);
+}
+
+class UploadPostRouteArgs {
+  const UploadPostRouteArgs({
+    this.key,
+    required this.activeScreen,
+  });
+
+  final Key? key;
+
+  final UploadPostScreen activeScreen;
+
+  @override
+  String toString() {
+    return 'UploadPostRouteArgs{key: $key, activeScreen: $activeScreen}';
+  }
 }

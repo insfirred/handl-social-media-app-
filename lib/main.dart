@@ -13,9 +13,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final sharedPreferences = await SharedPreferences.getInstance();
-  final container = ProviderContainer(overrides: [
-    sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-  ]);
+  final container = ProviderContainer(
+    overrides: [
+      sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+    ],
+  );
   runApp(
     UncontrolledProviderScope(
       container: container,

@@ -2,10 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:social_media/scr/repositories/app_repository.dart';
+import 'package:social_media/scr/utils/bottom_sheet_utils.dart';
 
-import '../../routing/app_router.dart';
 import 'home_view_model.dart';
 import 'widgets/tweet_card.dart';
+import 'widgets/upload_post_bottom_sheet.dart';
 
 @RoutePage()
 class HomeView extends ConsumerWidget {
@@ -48,7 +49,10 @@ class HomeView extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.router.push(const UploadPostRoute());
+          showHandlBottomSheet(
+            context: context,
+            builder: (context) => const UploadPostBottomSheet(),
+          );
         },
         child: const Icon(
           Icons.add,

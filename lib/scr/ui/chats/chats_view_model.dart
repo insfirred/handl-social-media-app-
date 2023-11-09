@@ -105,7 +105,6 @@ class ChatsViewModel extends StateNotifier<ChatsViewState> {
               recentChatsData.add(allChatsData[i]);
             }
           }
-
           recentChatsData.sort((a, b) =>
               b.lastMessage.createdAt.compareTo(a.lastMessage.createdAt));
 

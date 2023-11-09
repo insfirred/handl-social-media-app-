@@ -7,15 +7,14 @@ import '../../utils/snackbar_utils.dart';
 import '../common_components/text_field.dart';
 import 'upload_post_view_model.dart';
 
-@RoutePage()
-class UploadPostView extends ConsumerStatefulWidget {
-  const UploadPostView({super.key});
+class UploadTweet extends ConsumerStatefulWidget {
+  const UploadTweet({super.key});
 
   @override
-  ConsumerState<UploadPostView> createState() => _UploadPostViewState();
+  ConsumerState<UploadTweet> createState() => _UploadTweetState();
 }
 
-class _UploadPostViewState extends ConsumerState<UploadPostView> {
+class _UploadTweetState extends ConsumerState<UploadTweet> {
   late TextEditingController _controller;
 
   @override
@@ -97,6 +96,59 @@ class _UploadPostViewState extends ConsumerState<UploadPostView> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+@RoutePage()
+class UploadPostView extends ConsumerStatefulWidget {
+  const UploadPostView({
+    super.key,
+    required this.activeScreen,
+  });
+
+  final UploadPostScreen activeScreen;
+
+  @override
+  ConsumerState<UploadPostView> createState() => _UploadPostViewState();
+}
+
+class _UploadPostViewState extends ConsumerState<UploadPostView> {
+  @override
+  void initState() {
+    Future.delayed(
+      Duration.zero,
+      () => ref
+          .read(uploadPostViewModelProvider.notifier)
+          .setUploadPostScreen(widget.activeScreen),
+    );
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final activeScreen = ref.watch(
+      uploadPostViewModelProvider.select((_) => _.screen),
+    );
+
+    return activeScreen == UploadPostScreen.tweet
+        ? const UploadTweet()
+        : const UploadImage();
+  }
+}
+
+class UploadImage extends StatelessWidget {
+  const UploadImage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: SafeArea(
+        child: Center(
+          child: Text('Upload Image'),
         ),
       ),
     );

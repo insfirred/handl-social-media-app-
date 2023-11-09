@@ -11,6 +11,7 @@ import '../ui/profile/profile_view.dart';
 import '../ui/single_chat/single_chat_view.dart';
 import '../ui/splash/splash_view.dart';
 import '../ui/upload_post/upload_post_view.dart';
+import '../ui/upload_post/upload_post_view_model.dart';
 
 part 'app_router.gr.dart';
 

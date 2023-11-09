@@ -28,6 +28,9 @@ class UploadPostViewModel extends StateNotifier<UploadPostViewState> {
 
   setTweetText(String val) => state = state.copyWith(tweetText: val);
 
+  setUploadPostScreen(UploadPostScreen screen) =>
+      state = state.copyWith(screen: screen);
+
   Future<bool> uploadTweet() async {
     try {
       if (!_tweetValidation()) {
@@ -83,6 +86,7 @@ class UploadPostViewState with _$UploadPostViewState {
   const factory UploadPostViewState({
     String? tweetText,
     @Default(UploadPostViewStatus.initial) UploadPostViewStatus status,
+    @Default(UploadPostScreen.tweet) UploadPostScreen screen,
     String? errorMessage,
   }) = _UploadPostViewState;
 }
@@ -92,4 +96,9 @@ enum UploadPostViewStatus {
   loading,
   uploaded,
   error,
+}
+
+enum UploadPostScreen {
+  tweet,
+  image,
 }

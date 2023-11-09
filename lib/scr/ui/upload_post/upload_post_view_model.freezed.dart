@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$UploadPostViewState {
   String? get tweetText => throw _privateConstructorUsedError;
   UploadPostViewStatus get status => throw _privateConstructorUsedError;
+  UploadPostScreen get screen => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -32,7 +33,10 @@ abstract class $UploadPostViewStateCopyWith<$Res> {
       _$UploadPostViewStateCopyWithImpl<$Res, UploadPostViewState>;
   @useResult
   $Res call(
-      {String? tweetText, UploadPostViewStatus status, String? errorMessage});
+      {String? tweetText,
+      UploadPostViewStatus status,
+      UploadPostScreen screen,
+      String? errorMessage});
 }
 
 /// @nodoc
@@ -50,6 +54,7 @@ class _$UploadPostViewStateCopyWithImpl<$Res, $Val extends UploadPostViewState>
   $Res call({
     Object? tweetText = freezed,
     Object? status = null,
+    Object? screen = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
@@ -61,6 +66,10 @@ class _$UploadPostViewStateCopyWithImpl<$Res, $Val extends UploadPostViewState>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as UploadPostViewStatus,
+      screen: null == screen
+          ? _value.screen
+          : screen // ignore: cast_nullable_to_non_nullable
+              as UploadPostScreen,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -78,7 +87,10 @@ abstract class _$$UploadPostViewStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? tweetText, UploadPostViewStatus status, String? errorMessage});
+      {String? tweetText,
+      UploadPostViewStatus status,
+      UploadPostScreen screen,
+      String? errorMessage});
 }
 
 /// @nodoc
@@ -94,6 +106,7 @@ class __$$UploadPostViewStateImplCopyWithImpl<$Res>
   $Res call({
     Object? tweetText = freezed,
     Object? status = null,
+    Object? screen = null,
     Object? errorMessage = freezed,
   }) {
     return _then(_$UploadPostViewStateImpl(
@@ -105,6 +118,10 @@ class __$$UploadPostViewStateImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as UploadPostViewStatus,
+      screen: null == screen
+          ? _value.screen
+          : screen // ignore: cast_nullable_to_non_nullable
+              as UploadPostScreen,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -119,6 +136,7 @@ class _$UploadPostViewStateImpl implements _UploadPostViewState {
   const _$UploadPostViewStateImpl(
       {this.tweetText,
       this.status = UploadPostViewStatus.initial,
+      this.screen = UploadPostScreen.tweet,
       this.errorMessage});
 
   @override
@@ -127,11 +145,14 @@ class _$UploadPostViewStateImpl implements _UploadPostViewState {
   @JsonKey()
   final UploadPostViewStatus status;
   @override
+  @JsonKey()
+  final UploadPostScreen screen;
+  @override
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'UploadPostViewState(tweetText: $tweetText, status: $status, errorMessage: $errorMessage)';
+    return 'UploadPostViewState(tweetText: $tweetText, status: $status, screen: $screen, errorMessage: $errorMessage)';
   }
 
   @override
@@ -142,12 +163,14 @@ class _$UploadPostViewStateImpl implements _UploadPostViewState {
             (identical(other.tweetText, tweetText) ||
                 other.tweetText == tweetText) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.screen, screen) || other.screen == screen) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, tweetText, status, errorMessage);
+  int get hashCode =>
+      Object.hash(runtimeType, tweetText, status, screen, errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -161,12 +184,15 @@ abstract class _UploadPostViewState implements UploadPostViewState {
   const factory _UploadPostViewState(
       {final String? tweetText,
       final UploadPostViewStatus status,
+      final UploadPostScreen screen,
       final String? errorMessage}) = _$UploadPostViewStateImpl;
 
   @override
   String? get tweetText;
   @override
   UploadPostViewStatus get status;
+  @override
+  UploadPostScreen get screen;
   @override
   String? get errorMessage;
   @override
