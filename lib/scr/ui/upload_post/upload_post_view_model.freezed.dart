@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$UploadPostViewState {
   String? get tweetText => throw _privateConstructorUsedError;
+  String? get imageCaption => throw _privateConstructorUsedError;
+  File? get imageFile => throw _privateConstructorUsedError;
   UploadPostViewStatus get status => throw _privateConstructorUsedError;
   UploadPostScreen get screen => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
@@ -34,6 +36,8 @@ abstract class $UploadPostViewStateCopyWith<$Res> {
   @useResult
   $Res call(
       {String? tweetText,
+      String? imageCaption,
+      File? imageFile,
       UploadPostViewStatus status,
       UploadPostScreen screen,
       String? errorMessage});
@@ -53,6 +57,8 @@ class _$UploadPostViewStateCopyWithImpl<$Res, $Val extends UploadPostViewState>
   @override
   $Res call({
     Object? tweetText = freezed,
+    Object? imageCaption = freezed,
+    Object? imageFile = freezed,
     Object? status = null,
     Object? screen = null,
     Object? errorMessage = freezed,
@@ -62,6 +68,14 @@ class _$UploadPostViewStateCopyWithImpl<$Res, $Val extends UploadPostViewState>
           ? _value.tweetText
           : tweetText // ignore: cast_nullable_to_non_nullable
               as String?,
+      imageCaption: freezed == imageCaption
+          ? _value.imageCaption
+          : imageCaption // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imageFile: freezed == imageFile
+          ? _value.imageFile
+          : imageFile // ignore: cast_nullable_to_non_nullable
+              as File?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -88,6 +102,8 @@ abstract class _$$UploadPostViewStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {String? tweetText,
+      String? imageCaption,
+      File? imageFile,
       UploadPostViewStatus status,
       UploadPostScreen screen,
       String? errorMessage});
@@ -105,6 +121,8 @@ class __$$UploadPostViewStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? tweetText = freezed,
+    Object? imageCaption = freezed,
+    Object? imageFile = freezed,
     Object? status = null,
     Object? screen = null,
     Object? errorMessage = freezed,
@@ -114,6 +132,14 @@ class __$$UploadPostViewStateImplCopyWithImpl<$Res>
           ? _value.tweetText
           : tweetText // ignore: cast_nullable_to_non_nullable
               as String?,
+      imageCaption: freezed == imageCaption
+          ? _value.imageCaption
+          : imageCaption // ignore: cast_nullable_to_non_nullable
+              as String?,
+      imageFile: freezed == imageFile
+          ? _value.imageFile
+          : imageFile // ignore: cast_nullable_to_non_nullable
+              as File?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -135,12 +161,18 @@ class __$$UploadPostViewStateImplCopyWithImpl<$Res>
 class _$UploadPostViewStateImpl implements _UploadPostViewState {
   const _$UploadPostViewStateImpl(
       {this.tweetText,
+      this.imageCaption,
+      this.imageFile,
       this.status = UploadPostViewStatus.initial,
       this.screen = UploadPostScreen.tweet,
       this.errorMessage});
 
   @override
   final String? tweetText;
+  @override
+  final String? imageCaption;
+  @override
+  final File? imageFile;
   @override
   @JsonKey()
   final UploadPostViewStatus status;
@@ -152,7 +184,7 @@ class _$UploadPostViewStateImpl implements _UploadPostViewState {
 
   @override
   String toString() {
-    return 'UploadPostViewState(tweetText: $tweetText, status: $status, screen: $screen, errorMessage: $errorMessage)';
+    return 'UploadPostViewState(tweetText: $tweetText, imageCaption: $imageCaption, imageFile: $imageFile, status: $status, screen: $screen, errorMessage: $errorMessage)';
   }
 
   @override
@@ -162,6 +194,10 @@ class _$UploadPostViewStateImpl implements _UploadPostViewState {
             other is _$UploadPostViewStateImpl &&
             (identical(other.tweetText, tweetText) ||
                 other.tweetText == tweetText) &&
+            (identical(other.imageCaption, imageCaption) ||
+                other.imageCaption == imageCaption) &&
+            (identical(other.imageFile, imageFile) ||
+                other.imageFile == imageFile) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.screen, screen) || other.screen == screen) &&
             (identical(other.errorMessage, errorMessage) ||
@@ -169,8 +205,8 @@ class _$UploadPostViewStateImpl implements _UploadPostViewState {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, tweetText, status, screen, errorMessage);
+  int get hashCode => Object.hash(runtimeType, tweetText, imageCaption,
+      imageFile, status, screen, errorMessage);
 
   @JsonKey(ignore: true)
   @override
@@ -183,12 +219,18 @@ class _$UploadPostViewStateImpl implements _UploadPostViewState {
 abstract class _UploadPostViewState implements UploadPostViewState {
   const factory _UploadPostViewState(
       {final String? tweetText,
+      final String? imageCaption,
+      final File? imageFile,
       final UploadPostViewStatus status,
       final UploadPostScreen screen,
       final String? errorMessage}) = _$UploadPostViewStateImpl;
 
   @override
   String? get tweetText;
+  @override
+  String? get imageCaption;
+  @override
+  File? get imageFile;
   @override
   UploadPostViewStatus get status;
   @override
